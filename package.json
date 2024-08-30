@@ -1,0 +1,21 @@
+{
+  "name": "conquerorservices_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --env-file=.env server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "glob": "^11.0.0",
+    "lodash": "^4.17.21",
+    "sequelize": "^6.37.3"
+  }
+}
