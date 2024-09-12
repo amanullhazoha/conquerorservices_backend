@@ -1,6 +1,6 @@
 const path = require("path");
 const { DataTypes } = require("sequelize");
-const sequelize = require(path.join(process.cwd(), "src/config/lib/sequelize"));
+const sequelize = require(path.join(process.cwd(), "src/config/db/sequelize"));
 
 const Applicant = sequelize.define(
     "applicants",
@@ -213,10 +213,60 @@ const Applicant = sequelize.define(
 			type: DataTypes.DATE,
 		},
 
-		status: {
-			type: DataTypes.ENUM("draft", "active", "deactive"),
-			defaultValue: "draft",
-		}
+		// Table: applicants
+		// Columns:
+		// 	id bigint UN AI PK 
+		// 	position_id bigint UN 
+		// 	nationality varchar(255) 
+		// 	first_name varchar(255) 
+		// 	last_name varchar(255) 
+		// 	mother_name varchar(255) 
+		// 	father_name varchar(255) 
+		// 	religion varchar(255) 
+		// 	martialstatus varchar(255) 
+		// 	emirates_expiry date 
+		// 	country varchar(255) 
+		// 	province varchar(255) 
+		// 	city varchar(255) 
+		// 	policeStation varchar(255) 
+		// 	zip varchar(255) 
+		// 	homeaddrss varchar(255) 
+		// 	nid_cnic_front varchar(255) 
+		// 	nid_cnic_back varchar(255) 
+		// 	uaeresident varchar(255) 
+		// 	emiratesid varchar(255) 
+		// 	date_of_birth date 
+		// 	contact_number varchar(255) 
+		// 	whatsapp_number varchar(255) 
+		// 	email varchar(255) 
+		// 	applicant_image varchar(255) 
+		// 	applicant_passport varchar(255) 
+		// 	passportno varchar(255) 
+		// 	date_of_expiry date 
+		// 	applicant_resume varchar(255) 
+		// 	appli_dri_number varchar(255) 
+		// 	appli_dri_expiry date 
+		// 	appli_dri_lisence_frontpart varchar(255) 
+		// 	appli_dri_lisence_backpart varchar(255) 
+		// 	specialpage varchar(255) 
+		// 	submissionid varchar(255) 
+		// 	otp varchar(255) 
+		// 	otp_verified tinyint 
+		// 	otp_generated_at timestamp 
+		// 	applicant_status enum('new_entry','checked','editted','invited','accepted','rejected','under_review','shortlisted','pending','offer_extended','offer_accepted','offer_declined','reschedule_requested','called','hired') 
+		// 	viewed tinyint(1) 
+		// 	reference varchar(255) 
+		// 	nidorcnicnumber varchar(255) 
+		// 	nidorcnicexpiry varchar(255) 
+		// 	balance decimal(8,2) 
+		// 	have_uae_licence varchar(255) 
+		// 	UAE_Resident_Visa_No varchar(255) 
+		// 	UAE_License_No varchar(255) 
+		// 	SIM_No varchar(255) 
+		// 	UAE_DL_Front varchar(255) 
+		// 	UAE_DL_Back varchar(255) 
+		// 	created_at timestamp 
+		// 	updated_at
 	},
 	{
 		tableName: "applicants",
