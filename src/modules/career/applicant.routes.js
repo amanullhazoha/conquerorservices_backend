@@ -1,36 +1,28 @@
 const validate = require("../../config/middlewares/validate.middlware");
-const { getAllJobApplicants } = require("./applicant.controller");
+const { 
+    getJobApplicantId,
+    getAllJobApplicants, 
+    createApplicantBasicInfo,
+    updateApplicantBasicInfo,
+    updateApplicantLicenseInfo,
+    updateApplicantNidOrCnicInfo,
+} = require("./applicant.controller");
+const { 
+    jobApplyBasicSchema, 
+    jobApplyLicenseSchema, 
+    jobApplyNidOrCnicSchema 
+} = require("./applicant.schema");
 
 module.exports = (app) => {
     app.get("/api/v1/public/career/jobs", getAllJobApplicants);
 
-    app.get("/api/v1/public/career/jobs/:id",
-        (req, res) => {
-            res.status(200).send("user job apply id");
-        },
-    );
+    app.get("/api/v1/public/career/jobs/:id", getJobApplicantId);
     
-    app.post("/api/v1/public/career/jobs/apply/basic",
-        (req, res) => {
-            res.status(200).send("user job apply basic");
-        },
-    );
+    app.post("/api/v1/public/career/jobs/apply/basic", validate(jobApplyBasicSchema), createApplicantBasicInfo);
 
-    app.put("/api/v1/public/career/jobs/apply/basic",
-        (req, res) => {
-            res.status(200).send("user job apply basic update");
-        },
-    );
+    app.put("/api/v1/public/career/jobs/apply/basic", validate(jobApplyBasicSchema), updateApplicantBasicInfo);
 
-    app.post("/api/v1/public/career/jobs/apply/nid-or-cnic",
-        (req, res) => {
-            res.status(200).send("user job apply nid or cnic");
-        },
-    );
+    app.post("/api/v1/public/career/jobs/apply/nid-or-cnic", validate(jobApplyNidOrCnicSchema), updateApplicantNidOrCnicInfo);
 
-    app.post("/api/v1/public/career/jobs/apply/license",
-        (req, res) => {
-            res.status(200).send("user job apply license");
-        },
-    );
+    app.post("/api/v1/public/career/jobs/apply/license", validate(jobApplyLicenseSchema), updateApplicantLicenseInfo);
 };
