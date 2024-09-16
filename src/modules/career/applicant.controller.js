@@ -43,6 +43,7 @@ const createApplicantBasicInfo = async (req, res, next) => {
             contact_number,
             whatsapp_number,
             position_id,
+            hiring_position
         } = req.body;
 
         const applicant = await Applicant.create({   
@@ -57,6 +58,7 @@ const createApplicantBasicInfo = async (req, res, next) => {
             whatsapp_number,
             position_id,
             applicant_image,
+            hiring_position: position_id === "52" || position_id === 52 ? hiring_position : null,
 
             zip: "",
             city: "",
@@ -103,6 +105,7 @@ const updateApplicantBasicInfo = async (req, res, next) => {
             contact_number,
             whatsapp_number,
             position_id,
+            hiring_position
         } = req.body;
 
         const applicant = await Applicant.findOne({ where: { id } });
@@ -120,7 +123,19 @@ const updateApplicantBasicInfo = async (req, res, next) => {
             contact_number,
             whatsapp_number,
             position_id,
-            applicant_image
+            applicant_image,
+            hiring_position: position_id === "52" || position_id === 52 ? hiring_position : null,
+
+            UAE_DL_Front: position_id === "52" || position_id === 52 ? null : applicant.UAE_DL_Front,
+            UAE_DL_Back: position_id === "52" || position_id === 52 ? null : applicant.UAE_DL_Back,
+            appli_dri_number: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_number,
+            appli_dri_expiry: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_expiry,
+            have_uae_licence: position_id === "52" || position_id === 52 ? null : applicant.have_uae_licence,
+            UAE_License_No: position_id === "52" || position_id === 52 ? hiring_position : applicant.UAE_License_No,
+            UAE_Resident_Visa_No: position_id === "52" || position_id === 52 ? null : applicant.UAE_Resident_Visa_No,
+            SIM_No: position_id === "52" || position_id === 52 ? null : applicant.SIM_No,
+            appli_dri_lisence_frontpart: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_lisence_frontpart,
+            appli_dri_lisence_backpart: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_lisence_backpart,
         });
 
         res.status(201).send(applicant);
@@ -164,11 +179,6 @@ const updateApplicantNidOrCnicInfo = async (req, res, next) => {
         applicant_resume = req?.body?.applicant_resume;
     }
 
-    // const nid_cnic_front = req?.files?.nid_cnic_front[0]?.filename;
-    // const nid_cnic_back = req?.files?.nid_cnic_back[0]?.filename;
-    // const applicant_passport = req?.files?.applicant_passport[0]?.filename;
-    // const applicant_resume = req?.files?.applicant_resume[0]?.filename;
-
     const {
         zip,
         city,
@@ -197,20 +207,20 @@ const updateApplicantNidOrCnicInfo = async (req, res, next) => {
         religion,
         province,
         passportno,
-        emiratesid,
         homeaddrss,
-        uaeresident,
         father_name,
         policeStation,
         martialstatus,
         date_of_expiry,
-        nidorcnicnumber,
-        emirates_expiry,
-        applicant_resume,
         reference,
-        applicant_passport,
-        nid_cnic_back,
         nid_cnic_front,
+        nid_cnic_back,
+        nidorcnicnumber,
+        applicant_resume,
+        applicant_passport,
+        uaeresident,
+        emiratesid: uaeresident === "no" ? null : emiratesid,
+        emirates_expiry: uaeresident === "no" ? null : emirates_expiry,
     });
 
     res.status(201).send(applicant);

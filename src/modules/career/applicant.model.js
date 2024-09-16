@@ -13,6 +13,9 @@ const Applicant = sequelize.define(
 		position_id: { 
 			type: DataTypes.BIGINT.UNSIGNED,
 		},
+		hiring_position: { 
+			type: DataTypes.STRING,
+		},
 		nationality: { 
 			type: DataTypes.STRING,
 		},
