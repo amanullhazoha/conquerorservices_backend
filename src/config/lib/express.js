@@ -11,9 +11,10 @@ module.exports = async () => {
 
   const allowedOrigins = process.env.FRONTEND_BASE_URL.split(",");
 
-  console.log(allowedOrigins);
+  // Define CORS options
   const corsOptions = {
     origin: (origin, callback) => {
+      // Check if the origin is allowed
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         callback(null, true);
       } else {
@@ -26,6 +27,7 @@ module.exports = async () => {
     credentials: true,
   };
 
+  // Use the cors middleware with the defined options
   app.use(cors(corsOptions));
 
   app.set("trust proxy", true);

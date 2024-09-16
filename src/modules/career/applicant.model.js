@@ -22,6 +22,9 @@ const Applicant = sequelize.define(
 		last_name: { 
 			type: DataTypes.STRING,
 		},
+		gender: {
+			type: DataTypes.STRING,
+		},
 		mother_name: { 
 			type: DataTypes.STRING,
 		},
