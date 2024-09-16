@@ -264,11 +264,6 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
         appli_dri_lisence_backpart = req?.body?.appli_dri_lisence_backpart;
     }
 
-    // const UAE_DL_front = req?.files?.UAE_DL_front[0]?.filename;
-    // const UAE_DL_Back = req?.files?.UAE_DL_Back[0]?.filename;
-    // const appli_dri_lisence_frontpart = req?.files?.appli_dri_lisence_frontpart[0]?.filename;
-    // const appli_dri_lisence_backpart = req?.files?.appli_dri_lisence_backpart[0]?.filename;
-
     const {
         is_agree,
         submissionid,
@@ -290,13 +285,13 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
         UAE_DL_Front,
         UAE_DL_Back,
         appli_dri_number,
-        appli_dri_expiry,
         have_uae_licence,
         UAE_Resident_Visa_No,
         UAE_License_No,
         SIM_No,
         appli_dri_lisence_frontpart,
         appli_dri_lisence_backpart,
+        appli_dri_expiry: appli_dri_expiry ? appli_dri_expiry : null,
     });
 
     res.status(201).send(applicant);
