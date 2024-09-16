@@ -37,50 +37,50 @@ const jobApplyNidOrCnicSchema = object().shape({
         .required("This  field must not be empty."),
     homeaddrss: string()
         .required("This  field must not be empty."),
-    uaeresidient: string()
+    uaeresident: string()
         .required("This  field must not be empty."),
     father_name: string()
         .required("This  field must not be empty."),
     policeStation: string()
         .required("This  field must not be empty."),
-    maritalstatus: string()
+    martialstatus: string()
         .required("This  field must not be empty."),
     date_of_expiry: string()
         .required("This  field must not be empty."),
-    nidofcnicnumber: string()
+    nidorcnicnumber: string()
         .required("This  field must not be empty."),
     emirates_expiry: string()
         .required("This  field must not be empty."),
-    applicant_resume: string(),
+    // applicant_resume: string(),
     reference: string(),
-    applicant_passport: string()
-        .required("This  field must not be empty."),
-    nid_cnic_back: string()
-        .required("This  field must not be empty."),
-    nid_cnic_front: string()
-        .required("This  field must not be empty."),
+    // applicant_passport: string()
+    //     .required("This  field must not be empty."),
+    // nid_cnic_back: string()
+    //     .required("This  field must not be empty."),
+    // nid_cnic_front: string()
+    //     .required("This  field must not be empty."),
 });
 
 const jobApplyLicenseSchema = object().shape({
     submissionid: string()
         .required("This field must not be empty."),
-    UAE_DL_front: string()
-        .required("This field must not be empty."),
-    UAE_DL_Back: string()
-        .required("This field must not be empty."),
-    appli_dir_number: string()
+    // UAE_DL_front: string()
+    //     .required("This field must not be empty."),
+    // UAE_DL_Back: string()
+    //     .required("This field must not be empty."),
+    appli_dri_number: string()
         .required("This  field must not be empty."),
-    appli_dir_expiry: string()
+    appli_dri_expiry: string()
         .required("This  field must not be empty."),
     have_uae_licence: string()
         .required("This  field must not be empty."),
-    appli_dri_lisence_frontpart: string()
-        .required("This  field must not be empty."),
-    appli_dri_lisence_backpart: string()
-        .required("This  field must not be empty."),
+    // appli_dri_lisence_frontpart: string()
+    //     .required("This  field must not be empty."),
+    // appli_dri_lisence_backpart: string()
+    //     .required("This  field must not be empty."),
     UAE_Resident_Visa_No: string()
         .required("This  field must not be empty."),
-    uae_license_No: string()
+    UAE_License_No: string()
         .required("This  field must not be empty."),
     SIM_No: string(),
     is_agree: string()

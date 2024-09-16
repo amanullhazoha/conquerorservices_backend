@@ -84,7 +84,14 @@ const updateApplicantBasicInfo = async (req, res, next) => {
     try {
         const id = req.params.id;
 
-        const applicant_image = req?.files?.applicant_image[0]?.filename;
+        let applicant_image;
+
+        if(req?.files?.applicant_image) {
+            applicant_image = req?.files?.applicant_image[0]?.filename;
+        } else {
+            applicant_image = req?.body?.applicant_image;
+        }
+
         const {
             first_name,
             last_name,
@@ -127,6 +134,41 @@ const updateApplicantBasicInfo = async (req, res, next) => {
 const updateApplicantNidOrCnicInfo = async (req, res, next) => {
   try {
     const id = req.params.id;
+
+    let nid_cnic_front;
+    let nid_cnic_back;
+    let applicant_passport;
+    let applicant_resume;
+
+    if(req?.files?.nid_cnic_front) {
+        nid_cnic_front = req?.files?.nid_cnic_front[0]?.filename;
+    } else {
+        nid_cnic_front = req?.body?.nid_cnic_front;
+    }
+
+    if(req?.files?.nid_cnic_back) {
+        nid_cnic_back = req?.files?.nid_cnic_back[0]?.filename;
+    } else {
+        nid_cnic_back = req?.body?.nid_cnic_back;
+    }
+
+    if(req?.files?.applicant_passport) {
+        applicant_passport = req?.files?.applicant_passport[0]?.filename;
+    } else {
+        applicant_passport = req?.body?.applicant_passport;
+    }
+
+    if(req?.files?.applicant_resume) {
+        applicant_resume = req?.files?.applicant_resume[0]?.filename;
+    } else {
+        applicant_resume = req?.body?.applicant_resume;
+    }
+
+    // const nid_cnic_front = req?.files?.nid_cnic_front[0]?.filename;
+    // const nid_cnic_back = req?.files?.nid_cnic_back[0]?.filename;
+    // const applicant_passport = req?.files?.applicant_passport[0]?.filename;
+    // const applicant_resume = req?.files?.applicant_resume[0]?.filename;
+
     const {
         zip,
         city,
@@ -138,15 +180,11 @@ const updateApplicantNidOrCnicInfo = async (req, res, next) => {
         uaeresident,
         father_name,
         policeStation,
-        maritalstatus,
+        martialstatus,
         date_of_expiry,
-        nidofcnicnumber,
+        nidorcnicnumber,
         emirates_expiry,
-        applicant_resume,
         reference,
-        applicant_passport,
-        nid_cnic_back,
-        nid_cnic_front,
     } = req.body;
 
     const applicant = await Applicant.findOne({ where: { id } });
@@ -164,9 +202,9 @@ const updateApplicantNidOrCnicInfo = async (req, res, next) => {
         uaeresident,
         father_name,
         policeStation,
-        maritalstatus,
+        martialstatus,
         date_of_expiry,
-        nidofcnicnumber,
+        nidorcnicnumber,
         emirates_expiry,
         applicant_resume,
         reference,
@@ -186,19 +224,50 @@ const updateApplicantNidOrCnicInfo = async (req, res, next) => {
 const updateApplicantLicenseInfo = async (req, res, next) => {
   try {
     const id = req.params.id;
+
+    let UAE_DL_Front;
+    let UAE_DL_Back;
+    let appli_dri_lisence_frontpart;
+    let appli_dri_lisence_backpart;
+
+    if(req?.files?.UAE_DL_front) {
+        UAE_DL_Front = req?.files?.UAE_DL_Front[0]?.filename;
+    } else {
+        UAE_DL_Front = req?.body?.UAE_DL_Front;
+    }
+
+    if(req?.files?.UAE_DL_Back) {
+        UAE_DL_Back = req?.files?.UAE_DL_Back[0]?.filename;
+    } else {
+        UAE_DL_Back = req?.body?.UAE_DL_Back;
+    }
+
+    if(req?.files?.appli_dri_lisence_frontpart) {
+        appli_dri_lisence_frontpart = req?.files?.appli_dri_lisence_frontpart[0]?.filename;
+    } else {
+        appli_dri_lisence_frontpart = req?.body?.appli_dri_lisence_frontpart;
+    }
+
+    if(req?.files?.appli_dri_lisence_backpart) {
+        appli_dri_lisence_backpart = req?.files?.appli_dri_lisence_backpart[0]?.filename;
+    } else {
+        appli_dri_lisence_backpart = req?.body?.appli_dri_lisence_backpart;
+    }
+
+    // const UAE_DL_front = req?.files?.UAE_DL_front[0]?.filename;
+    // const UAE_DL_Back = req?.files?.UAE_DL_Back[0]?.filename;
+    // const appli_dri_lisence_frontpart = req?.files?.appli_dri_lisence_frontpart[0]?.filename;
+    // const appli_dri_lisence_backpart = req?.files?.appli_dri_lisence_backpart[0]?.filename;
+
     const {
         is_agree,
         submissionid,
-        UAE_DL_front,
-        UAE_DL_Back,
-        appli_dir_number,
-        appli_dir_expiry,
+        appli_dri_number,
+        appli_dri_expiry,
         have_uae_licence,
         UAE_Resident_Visa_No,
-        uae_license_No,
+        UAE_License_No,
         SIM_No,
-        appli_dri_lisence_frontpart,
-        appli_dri_lisence_backpart,
     } = req.body;
 
     const applicant = await Applicant.findOne({ where: { id } });
@@ -208,13 +277,13 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
     await applicant.update({
         is_agree,
         submissionid,
-        UAE_DL_front,
+        UAE_DL_Front,
         UAE_DL_Back,
-        appli_dir_number,
-        appli_dir_expiry,
+        appli_dri_number,
+        appli_dri_expiry,
         have_uae_licence,
         UAE_Resident_Visa_No,
-        uae_license_No,
+        UAE_License_No,
         SIM_No,
         appli_dri_lisence_frontpart,
         appli_dri_lisence_backpart,
