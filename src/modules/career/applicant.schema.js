@@ -41,8 +41,8 @@ const jobApplyBasicSchema = Yup.object().shape({
     }
     return schema.nullable();
   }),
-  applicant_image: Yup.mixed()
-    .required('Applicant image is required')
+  // applicant_image: Yup.mixed()
+  //   .required('Applicant image is required')
 });
 
 const jobApplyNidOrCnicSchema = Yup.object().shape({
