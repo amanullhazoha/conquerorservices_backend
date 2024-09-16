@@ -83,8 +83,8 @@ const jobApplyLicenseSchema = object().shape({
     UAE_License_No: string()
         .required("This  field must not be empty."),
     SIM_No: string(),
-    is_agree: string()
-        .required("This  field must not be empty."),
+    // is_agree: string()
+    //     .required("This  field must not be empty."),
 });
 
 module.exports = {

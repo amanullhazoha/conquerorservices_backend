@@ -230,7 +230,7 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
     let appli_dri_lisence_frontpart;
     let appli_dri_lisence_backpart;
 
-    if(req?.files?.UAE_DL_front) {
+    if(req?.files?.UAE_DL_Front) {
         UAE_DL_Front = req?.files?.UAE_DL_Front[0]?.filename;
     } else {
         UAE_DL_Front = req?.body?.UAE_DL_Front;
