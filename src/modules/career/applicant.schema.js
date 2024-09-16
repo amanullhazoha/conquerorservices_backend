@@ -81,18 +81,18 @@ const jobApplyNidOrCnicSchema = Yup.object().shape({
 const jobApplyLicenseSchema = Yup.object().shape({
 //   is_agree: Yup.boolean().required('Agreement is required').isTrue('You must agree to the terms'),
   submissionid: Yup.string().required('Submission ID is required'),
-  UAE_DL_Front: Yup.string().when('position_id', ([position_id], schema) => {
-    if (position_id === '50' || position_id === 50) {
-      return schema.required('UAE license front is required');
-    }
-    return schema.nullable();
-  }),
-  UAE_DL_Back: Yup.string().when('position_id', ([position_id], schema) => {
-    if (position_id === '50' || position_id === 50) {
-      return schema.required('UAE license back is required');
-    }
-    return schema.nullable();
-  }),
+//   UAE_DL_Front: Yup.string().when('position_id', ([position_id], schema) => {
+//     if (position_id === '50' || position_id === 50) {
+//       return schema.required('UAE license front is required');
+//     }
+//     return schema.nullable();
+//   }),
+//   UAE_DL_Back: Yup.string().when('position_id', ([position_id], schema) => {
+//     if (position_id === '50' || position_id === 50) {
+//       return schema.required('UAE license back is required');
+//     }
+//     return schema.nullable();
+//   }),
   appli_dri_number: Yup.string().when('position_id', ([position_id], schema) => {
     if (position_id === '50' || position_id === 50) {
       return schema.required('Driving license is required');
@@ -129,18 +129,18 @@ const jobApplyLicenseSchema = Yup.object().shape({
     }
     return schema.nullable();
   }),
-  appli_dri_lisence_frontpart: Yup.string().when('position_id', ([position_id], schema) => {
-    if (position_id === '50' || position_id === 50) {
-      return schema.required('License front part is required');
-    }
-    return schema.nullable();
-  }),
-  appli_dri_lisence_backpart: Yup.string().when('position_id', ([position_id], schema) => {
-    if (position_id === '50' || position_id === 50) {
-      return schema.required('License back part is required');
-    }
-    return schema.nullable();
-  }),
+//   appli_dri_lisence_frontpart: Yup.string().when('position_id', ([position_id], schema) => {
+//     if (position_id === '50' || position_id === 50) {
+//       return schema.required('License front part is required');
+//     }
+//     return schema.nullable();
+//   }),
+//   appli_dri_lisence_backpart: Yup.string().when('position_id', ([position_id], schema) => {
+//     if (position_id === '50' || position_id === 50) {
+//       return schema.required('License back part is required');
+//     }
+//     return schema.nullable();
+//   }),
 });
 
 
