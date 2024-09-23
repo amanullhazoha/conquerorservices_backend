@@ -19,23 +19,26 @@ const jobApplyBasicSchema = Yup.object().shape({
   contact_number: Yup.string()
     .required('Contact number is required')
     .when('nationality', ([nationality], schema) => {
-      console.log(nationality)
       switch (nationality) {
         case 'Nepal':
+          return schema.length(14, 'Contact number must be 10 digits');
         case 'Pakistan':
+          return schema.length(13, 'Contact number must be 10 digits');
         case 'India':
+          return schema.length(13, 'Contact number must be 10 digits');
         case 'Philippine':
+          return schema.length(13, 'Contact number must be 10 digits');
         case 'Bangladesh':
-          return schema.length(10, 'Contact number must be 10 digits');
+          return schema.length(14, 'Contact number must be 10 digits');
         case 'Sri Lanka':
-          return schema.length(9, 'Contact number must be 9 digits');
+          return schema.length(12, 'Contact number must be 9 digits');
         default:
           return schema;
       }
     }),
   whatsapp_number: Yup.string()
-    .min(8, "Number minimum 10 digits")
-    .max(15, "Number maximum 15 digits")
+    .min(9, "Number minimum 8 digits")
+    .max(19, "Number maximum 15 digits")
     .required('Whatsapp number is required'),
   position_id: Yup.string().required('Position ID is required'),
   hiring_position: Yup.string().when('position_id', (position_id, schema) => {
@@ -82,8 +85,8 @@ const jobApplyNidOrCnicSchema = Yup.object().shape({
     }),
   date_of_expiry: Yup.string().required('Date of expiry is required'),
   nidorcnicnumber: Yup.string().required('NID/CNIC number is required'),
-  // applicant_resume: Yup.mixed(),
   reference: Yup.string(),
+  // applicant_resume: Yup.mixed(),
   // applicant_passport: Yup.mixed().required('Applicant passport is required'),
   // nid_cnic_back: Yup.mixed().required('NID/CNIC back is required'),
   // nid_cnic_front: Yup.mixed().required('NID/CNIC front is required'),
@@ -163,7 +166,6 @@ const jobApplyLicenseSchema = Yup.object().shape({
   //   return schema.nullable();
   // }),
 });
-
 
 module.exports = {
     jobApplyBasicSchema,
