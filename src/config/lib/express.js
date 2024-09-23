@@ -47,6 +47,8 @@ module.exports = async () => {
     }),
   );
 
+  app.use('/uploads', express.static(path.join(process.cwd(), '/uploads')));
+
   const globalConfig = config.getGlobalConfig();
 
   globalConfig.routes.forEach((routePath) => {

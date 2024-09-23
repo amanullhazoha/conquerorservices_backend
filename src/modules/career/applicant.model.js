@@ -40,6 +40,9 @@ const Applicant = sequelize.define(
 		martialstatus: { 
 			type: DataTypes.STRING,
 		},
+		spouse: {
+			type: DataTypes.STRING,
+		},
 		emirates_expiry: { 
 			type: DataTypes.DATE,
 		},
@@ -165,7 +168,10 @@ const Applicant = sequelize.define(
 		},
 		UAE_DL_Back: {
 			type: DataTypes.STRING,
-		},	 
+		},	
+		is_agree: {
+			type: DataTypes.BOOLEAN,
+		}, 
 	},
 	{
 		tableName: "applicants",

@@ -30,7 +30,13 @@ const getJobApplicantId = async (req, res, next) => {
 
 const createApplicantBasicInfo = async (req, res, next) => {
     try {
-        const applicant_image = req?.files?.applicant_image[0]?.filename;
+        let applicant_image;
+
+        if(req?.files?.applicant_image) {
+            applicant_image = req?.files?.applicant_image[0]?.filename;
+        } else {
+            applicant_image = req?.body?.applicant_image;
+        }
         
         const {
             first_name,
@@ -131,7 +137,7 @@ const updateApplicantBasicInfo = async (req, res, next) => {
             appli_dri_number: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_number,
             appli_dri_expiry: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_expiry,
             have_uae_licence: position_id === "52" || position_id === 52 ? null : applicant.have_uae_licence,
-            UAE_License_No: position_id === "52" || position_id === 52 ? hiring_position : applicant.UAE_License_No,
+            UAE_License_No: position_id === "52" || position_id === 52 ? null : applicant.UAE_License_No,
             UAE_Resident_Visa_No: position_id === "52" || position_id === 52 ? null : applicant.UAE_Resident_Visa_No,
             SIM_No: position_id === "52" || position_id === 52 ? null : applicant.SIM_No,
             appli_dri_lisence_frontpart: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_lisence_frontpart,
@@ -195,6 +201,7 @@ const updateApplicantNidOrCnicInfo = async (req, res, next) => {
         nidorcnicnumber,
         emirates_expiry,
         reference,
+        spouse,
     } = req.body;
 
     const applicant = await Applicant.findOne({ where: { id } });
@@ -221,6 +228,7 @@ const updateApplicantNidOrCnicInfo = async (req, res, next) => {
         uaeresident,
         emiratesid: uaeresident === "no" ? null : emiratesid,
         emirates_expiry: uaeresident === "no" ? null : emirates_expiry,
+        spouse: martialstatus === "married" ? spouse : null,
     });
 
     res.status(201).send(applicant);
@@ -281,17 +289,17 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
 
     await applicant.update({
         is_agree,
+        UAE_DL_Back,
         submissionid,
         UAE_DL_Front,
-        UAE_DL_Back,
         appli_dri_number,
         have_uae_licence,
-        UAE_Resident_Visa_No,
-        UAE_License_No,
-        SIM_No,
-        appli_dri_lisence_frontpart,
         appli_dri_lisence_backpart,
+        appli_dri_lisence_frontpart,
+        SIM_No: have_uae_licence === "yes" ? SIM_No : null,
         appli_dri_expiry: appli_dri_expiry ? appli_dri_expiry : null,
+        UAE_License_No: have_uae_licence === "yes" ? UAE_License_No : null,
+        UAE_Resident_Visa_No: have_uae_licence === "yes" ? UAE_Resident_Visa_No : null,
     });
 
     res.status(201).send(applicant);
