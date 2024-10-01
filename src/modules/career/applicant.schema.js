@@ -168,18 +168,7 @@ const jobApplyLicenseSchema = Yup.object().shape({
   ref1_name: Yup.string(),
   ref1_email: Yup.string()
     .nullable() 
-    .email('Invalid email')
-    .test(
-      'is-valid-domain',
-      'Email domain must be one of gmail.com, yahoo.com, hotmail.com, outlook.com, or icloud.com',
-      (value) => {
-        if (value) {
-          const domain = value.split('@')[1];
-          return allowedDomains.includes(domain);
-        }
-        return true;
-      }
-    ),
+    .email('Invalid email'),
   ref1_phone: Yup.string()
     .nullable()
     .max(19, "Number maximum 15 digits"),
@@ -188,18 +177,7 @@ const jobApplyLicenseSchema = Yup.object().shape({
   ref2_name: Yup.string(),
   ref2_email: Yup.string()
     .nullable() 
-    .email('Invalid email')
-    .test(
-      'is-valid-domain',
-      'Email domain must be one of gmail.com, yahoo.com, hotmail.com, outlook.com, or icloud.com',
-      (value) => {
-        if (value) {
-          const domain = value.split('@')[1];
-          return allowedDomains.includes(domain);
-        }
-        return true;
-      }
-    ),
+    .email('Invalid email'),
   ref2_phone: Yup.string()
     .nullable()
     .max(19, "Number maximum 15 digits"),
