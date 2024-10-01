@@ -165,6 +165,46 @@ const jobApplyLicenseSchema = Yup.object().shape({
   //   }
   //   return schema.nullable();
   // }),
+  ref1_name: Yup.string(),
+  ref1_email: Yup.string()
+    .nullable() 
+    .email('Invalid email')
+    .test(
+      'is-valid-domain',
+      'Email domain must be one of gmail.com, yahoo.com, hotmail.com, outlook.com, or icloud.com',
+      (value) => {
+        if (value) {
+          const domain = value.split('@')[1];
+          return allowedDomains.includes(domain);
+        }
+        return true;
+      }
+    ),
+  ref1_phone: Yup.string()
+    .nullable()
+    .max(19, "Number maximum 15 digits"),
+  ref1_country: Yup.string(),
+  ref1_address: Yup.string(),
+  ref2_name: Yup.string(),
+  ref2_email: Yup.string()
+    .nullable() 
+    .email('Invalid email')
+    .test(
+      'is-valid-domain',
+      'Email domain must be one of gmail.com, yahoo.com, hotmail.com, outlook.com, or icloud.com',
+      (value) => {
+        if (value) {
+          const domain = value.split('@')[1];
+          return allowedDomains.includes(domain);
+        }
+        return true;
+      }
+    ),
+  ref2_phone: Yup.string()
+    .nullable()
+    .max(19, "Number maximum 15 digits"),
+  ref2_country: Yup.string(),
+  ref2_address: Yup.string(),
 });
 
 module.exports = {

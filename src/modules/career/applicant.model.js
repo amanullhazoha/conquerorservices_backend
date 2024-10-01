@@ -172,6 +172,36 @@ const Applicant = sequelize.define(
 		is_agree: {
 			type: DataTypes.BOOLEAN,
 		}, 
+		ref1_name: {
+			type: DataTypes.STRING,
+		},
+        ref1_email: {
+			type: DataTypes.STRING,
+		},
+        ref1_phone: {
+			type: DataTypes.STRING,
+		},
+        ref1_country: {
+			type: DataTypes.STRING,
+		},
+        ref1_address: {
+			type: DataTypes.STRING,
+		},
+        ref2_name: {
+			type: DataTypes.STRING,
+		},
+        ref2_email: {
+			type: DataTypes.STRING,
+		},
+        ref2_phone: {
+			type: DataTypes.STRING,
+		},
+        ref2_country: {
+			type: DataTypes.STRING,
+		},
+        ref2_address: {
+			type: DataTypes.STRING,
+		},
 	},
 	{
 		tableName: "applicants",

@@ -142,6 +142,16 @@ const updateApplicantBasicInfo = async (req, res, next) => {
             SIM_No: position_id === "52" || position_id === 52 ? null : applicant.SIM_No,
             appli_dri_lisence_frontpart: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_lisence_frontpart,
             appli_dri_lisence_backpart: position_id === "52" || position_id === 52 ? null : applicant.appli_dri_lisence_backpart,
+            ref1_name: position_id === "52" || position_id === 52 ? applicant?.ref1_name : null,
+            ref1_email: position_id === "52" || position_id === 52 ? applicant?.ref1_email : null,
+            ref1_phone: position_id === "52" || position_id === 52 ? applicant?.ref1_phone : null,
+            ref1_country: position_id === "52" || position_id === 52 ? applicant?.ref1_country : null,
+            ref1_address: position_id === "52" || position_id === 52 ? applicant?.ref1_address : null,
+            ref2_name: position_id === "52" || position_id === 52 ? applicant?.ref2_name : null,
+            ref2_email: position_id === "52" || position_id === 52 ? applicant?.ref2_email : null,
+            ref2_phone: position_id === "52" || position_id === 52 ? applicant?.ref2_phone : null,
+            ref2_country: position_id === "52" || position_id === 52 ? applicant?.ref2_country : null,
+            ref2_address: position_id === "52" || position_id === 52 ? applicant?.ref2_address : null,
         });
 
         res.status(201).send(applicant);
@@ -281,6 +291,16 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
         UAE_Resident_Visa_No,
         UAE_License_No,
         SIM_No,
+        ref1_name,
+        ref1_email,
+        ref1_phone,
+        ref1_country,
+        ref1_address,
+        ref2_name,
+        ref2_email,
+        ref2_phone,
+        ref2_country,
+        ref2_address,
     } = req.body;
 
     const applicant = await Applicant.findOne({ where: { id } });
@@ -300,6 +320,16 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
         appli_dri_expiry: appli_dri_expiry ? appli_dri_expiry : null,
         UAE_License_No: have_uae_licence === "yes" ? UAE_License_No : null,
         UAE_Resident_Visa_No: have_uae_licence === "yes" ? UAE_Resident_Visa_No : null,
+        ref1_name,
+        ref1_email,
+        ref1_phone,
+        ref1_country,
+        ref1_address,
+        ref2_name,
+        ref2_email,
+        ref2_phone,
+        ref2_country,
+        ref2_address,
     });
 
     res.status(201).send(applicant);
