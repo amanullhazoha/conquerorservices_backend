@@ -62,7 +62,7 @@ const userForgotPassword = async (req, res, next) => {
     const emailVerifyToken = await EmailVerifyToken.create({
       expire_date,
       email: user.email,
-      created_by: user._id,
+      created_by: user.id,
     });
 
     nodemailer(
@@ -108,13 +108,7 @@ const userPasswordReset = async (req, res, next) => {
 
     await user.update({ password });
 
-    Object.keys(userData).forEach((key) => {
-      user[key] = userData[key] ?? user[key];
-    });
-
-    await user.save();
-
-    await EmailVerifyToken.deleteOne({ where: { created_by: user.id } });
+    await EmailVerifyToken.destroy({ where: { created_by: user.id } });
 
     const response = {
       code: 200,
