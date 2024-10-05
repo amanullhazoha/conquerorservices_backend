@@ -4,7 +4,10 @@ const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const config = require(path.join(process.cwd(), "src/config"));
-const serverError = require(path.join(process.cwd(), "src/config/middlewares/serverError.middleware"));
+const serverError = require(path.join(
+  process.cwd(),
+  "src/config/middlewares/serverError.middleware"
+));
 
 module.exports = async () => {
   const app = express();
@@ -44,10 +47,10 @@ module.exports = async () => {
       resave: false,
       saveUninitialized: true,
       cookie: { secure: false },
-    }),
+    })
   );
 
-  app.use('/uploads', express.static(path.join(process.cwd(), '/uploads')));
+  app.use("/uploads", express.static(path.join(process.cwd(), "/uploads")));
 
   const globalConfig = config.getGlobalConfig();
 
