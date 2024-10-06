@@ -3,7 +3,7 @@ const User = require("../user/user.model");
 const nodemailer = require("../../config/emailService/config");
 const jwt = require("jsonwebtoken");
 const { verifyToken } = require("../../config/lib/jwtHelper");
-const { emailVerifyMail } = require("../../config/emailService/template");
+const { sendPasswordResetEmail } = require("../../config/emailService/template");
 const {
 	generateAccessToken,
 } = require("../../config/lib/accessTokenGenerator");
@@ -11,10 +11,6 @@ const {
 	hashPassword,
 	comparePassword,
 } = require("../../config/lib/hashFunction");
-const User = require(path.join(
-	process.cwd(),
-	"src/modules/career/applicant.model"
-));
 const EmailVerifyToken = require(path.join(
 	process.cwd(),
 	"src/modules/user/emailVerifyToken.model"
@@ -105,7 +101,7 @@ const userForgotPassword = async (req, res, next) => {
 			}
 		);
 
-		nodemailer(emailVerifyMail(user.email, user.user_name, token));
+		nodemailer(sendPasswordResetEmail(user.email, token));
 
 		res.status(201).send({
 			message: "Verify link sent on your mail successfully",
