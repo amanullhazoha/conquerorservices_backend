@@ -129,6 +129,9 @@ const User = sequelize.define(
     is_agree: {
       type: DataTypes.BOOLEAN,
     },
+    role: {
+      type: DataTypes.STRING,
+    },
   },
   {
     tableName: "users",
