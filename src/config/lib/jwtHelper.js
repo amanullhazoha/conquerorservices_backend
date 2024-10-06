@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 // Generate token
 const generateToken = (payload, secret, expiresIn) => {
@@ -8,9 +8,19 @@ const generateToken = (payload, secret, expiresIn) => {
   return token;
 };
 
-// Verify token
 const verifyToken = (token, secret) => {
-  return jwt.verify(token, secret);
+  try {
+    const decoded = jwt.verify(token, secret);
+    return decoded;
+  } catch (err) {
+    if (err.name === "JsonWebTokenError") {
+      return { error: "Invalid token" };
+    } else if (err.name === "TokenExpiredError") {
+      return { error: "Token expired" };
+    } else {
+      return { error: "Authentication error" };
+    }
+  }
 };
 
 module.exports = {

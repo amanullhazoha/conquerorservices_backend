@@ -13,6 +13,7 @@ const {
   googleOauthCallBack,
   getAllJobApplicants,
   applicantVerifyByOTP,
+  checkApplicantValidToken,
   createApplicantBasicInfo,
   updateApplicantBasicInfo,
   getSecureJobApplicantById,
@@ -87,6 +88,10 @@ module.exports = (app) => {
   app.post("/api/v1/public/identity-by-email", applicantVerifyUsingEmail);
   app.post("/api/v1/public/identity-by-passport", applicantVerifyUsingPassport);
   app.post("/api/v1/public/applicant-verify-by-otp", applicantVerifyByOTP);
+  app.get(
+    "/api/v1/public/check-applicant-token/:token",
+    checkApplicantValidToken
+  );
 
   app.get(
     "/api/v1/public/google-oauth",

@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const Applicant = require("./applicant.model");
 const EmailVerifyOTP = require("./emailVerifyOtp");
+const { verifyToken } = require("../../config/lib/jwtHelper");
 const nodemailer = require("../../config/emailService/config");
 const {
   verifySuccessMail,
@@ -667,7 +668,54 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
       ref2_address,
     });
 
-    res.status(201).send(applicant);
+    let token = null;
+
+    if (applicant?.email_verify === "initiate") {
+      let currentDate = new Date();
+      let expire_date = new Date(currentDate.getTime() + 5 * 60000);
+
+      const otpCode = Math.floor(100000 + Math.random() * 900000);
+
+      const emailVerifyOTP = await EmailVerifyOTP.create({
+        expire_date,
+        otp_code: otpCode,
+        email: applicant.email,
+        created_by: applicant.id,
+      });
+
+      token = jwt.sign(
+        {
+          applicantId: applicant?.id,
+          emailVerifyOtpId: emailVerifyOTP.id,
+        },
+        process.env.COOKIE_PARSER_TOKEN,
+        {
+          expiresIn: process.env.COOKIE_EXPIRE_TIME,
+        }
+      );
+
+      nodemailer(
+        emailVerifyMailForApplicant({
+          email: applicant.email,
+          otp: emailVerifyOTP?.otp_code,
+          user_name: applicant.first_name + " " + applicant?.last_name,
+        })
+      );
+
+      await applicant.update({ email_verify: "unverified" });
+    }
+
+    const response = {
+      code: 201,
+      message: "data update successfully.",
+      data: {
+        token,
+        ...applicant,
+      },
+      links: req.path,
+    };
+
+    res.status(201).json(response);
   } catch (error) {
     console.log(error);
 
@@ -685,7 +733,11 @@ const applicantVerifyUsingEmail = async (req, res, next) => {
       },
     });
 
-    if (!applicant) return res.status(404).send("Invalid credentials.");
+    if (!applicant)
+      return res.status(404).json({
+        email,
+        message: "Invalid credentials.",
+      });
 
     const alreadySended = await EmailVerifyOTP.findOne({
       where: { created_by: applicant.id },
@@ -862,9 +914,63 @@ const applicantVerifyByOTP = async (req, res, next) => {
   }
 };
 
+const checkApplicantValidToken = async (req, res, next) => {
+  try {
+    const token = req.params.token;
+
+    const decodedToken = verifyToken(token, process.env.COOKIE_PARSER_TOKEN);
+
+    if (decodedToken?.error) {
+      return res.status(400).json({
+        email: "",
+        message: "Token is not valid.",
+      });
+    }
+
+    const applicant = await Applicant.findOne({
+      where: {
+        id: decodedToken?.applicantId,
+      },
+    });
+
+    const emailVerifyOtp = await EmailVerifyOTP.findOne({
+      where: {
+        id: decodedToken?.emailVerifyOtpId,
+      },
+    });
+
+    if (!emailVerifyOtp)
+      return res.status(404).json({
+        email: "",
+        message: "Token is not valid.",
+      });
+
+    if (new Date(emailVerifyOtp.expire_date).getTime() < new Date().getTime())
+      return res
+        .status(400)
+        .json({ email: applicant?.email, message: "Token time is expire." });
+
+    return res.status(200).json({
+      status: "ok",
+      message: `Token is valid`,
+      data: {
+        token: token,
+        email: applicant?.email,
+        expire_date: emailVerifyOtp?.expire_date,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 const googleOauthCallBack = async (req, res, next) => {
   try {
     const user = req?.user;
+
+    console.log(user);
 
     const payload = {
       id: user.id,
@@ -896,6 +1002,7 @@ module.exports = {
   googleOauthCallBack,
   getAllJobApplicants,
   applicantVerifyByOTP,
+  checkApplicantValidToken,
   createApplicantBasicInfo,
   updateApplicantBasicInfo,
   getSecureJobApplicantById,

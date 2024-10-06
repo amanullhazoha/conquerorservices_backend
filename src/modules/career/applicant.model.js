@@ -88,6 +88,10 @@ const Applicant = sequelize.define(
     email: {
       type: DataTypes.STRING,
     },
+    email_verify: {
+      type: DataTypes.ENUM("unverified", "initiate", "verified"),
+      defaultValue: "initiate",
+    },
     applicant_image: {
       type: DataTypes.STRING,
     },

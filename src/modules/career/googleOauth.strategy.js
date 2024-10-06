@@ -22,15 +22,7 @@ module.exports = () => {
             return done(null, false);
           }
 
-          nodemailer(
-            verifySuccessMail(
-              user?.email,
-              user?.user_name,
-              "Join us successfully"
-            )
-          );
-
-          return done(null, isExist);
+          return done(null, { id: isExist?.id, email: isExist?.email });
         }
 
         return done(null, false);
