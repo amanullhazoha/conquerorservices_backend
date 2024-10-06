@@ -1,4 +1,5 @@
 const path = require("path");
+const { Op } = require("sequelize");
 const Applicant = require(path.join(
   process.cwd(),
   "src/modules/career/applicant.model"
@@ -6,7 +7,42 @@ const Applicant = require(path.join(
 
 const getAllJobApplicants = async (req, res, next) => {
   try {
-    const jobApplicant = await Applicant.findAll();
+    const searchQuery = req.query.search;
+
+    let applicants;
+
+    if (searchQuery) {
+      applicants = await Applicant.findAll({
+        where: {
+          [Op.or]: [
+            { first_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+            { last_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+            { email: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+            { passportno: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+            { contact_number: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+          ],
+        },
+        raw: true,
+        nest: true,
+      });
+    } else {
+      applicants = await Applicant.findAll();
+    }
+
+    res.status(200).send(applicants);
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
+const getSecureJobApplicantById = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const jobApplicant = await Applicant.findOne({ where: { id } });
+
+    if (!jobApplicant) return res.status(404).send("Data not found by ID.");
 
     res.status(200).send(jobApplicant);
   } catch (error) {
@@ -652,6 +688,7 @@ module.exports = {
   getAllJobApplicants,
   createApplicantBasicInfo,
   updateApplicantBasicInfo,
+  getSecureJobApplicantById,
   updateApplicantLicenseInfo,
   updateApplicantNidOrCnicInfo,
 };

@@ -2,26 +2,27 @@ const passport = require("passport");
 const { upload } = require("../../config/lib/multerConfig");
 const validate = require("../../config/middlewares/validate.middlware");
 const {
+  jobApplicantSchema,
+  jobApplyBasicSchema,
+  jobApplyLicenseSchema,
+  jobApplyNidOrCnicSchema,
+} = require("./applicant.schema");
+const {
   getJobApplicantId,
   updateApplication,
   googleOauthCallBack,
   getAllJobApplicants,
   createApplicantBasicInfo,
   updateApplicantBasicInfo,
+  getSecureJobApplicantById,
   updateApplicantLicenseInfo,
   updateApplicantNidOrCnicInfo,
 } = require("./applicant.controller");
-const {
-  jobApplicantSchema,
-  jobApplyBasicSchema,
-  jobApplyLicenseSchema,
-  jobApplyNidOrCnicSchema,
-} = require("./applicant.schema");
 
 module.exports = (app) => {
   app.get("/api/v1/secure/career/jobs", getAllJobApplicants);
 
-  app.get("/api/v1/secure/career/jobs/:id", getJobApplicantId);
+  app.get("/api/v1/secure/career/jobs/:id", getSecureJobApplicantById);
 
   app.put(
     "/api/v1/secure/career/jobs/:id",
