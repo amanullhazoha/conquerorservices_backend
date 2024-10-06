@@ -1,61 +1,57 @@
 const fs = require("fs");
 const path = require("path");
 
-const emailVerifyMail = (email, user_name, message) => {
-	// if (!fs.existsSync(path.join(__dirname, '../../assets/files/services-rival.pdf'))) {
-	//   console.error('PDF file not found at:');
-	//   return;
-	// }
+const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
+  return {
+    from: process.env.EMAIL_SENDER_ACCOUNT,
+    to: email,
+    text: message,
+    subject: "Email verification for applicant",
+    html: `
+      <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
+        <h2 style="color: #333;">Email Verification OTP code</h2>
+        <p>Hi ${user_name}</p>
 
-	// const bufferFile = fs.readFileSync(path.join(__dirname, '../../assets/files/services-rival.pdf'));
+		<h3>${otp}</h3>
 
-	return {
-		from: process.env.EMAIL_SENDER_ACCOUNT,
-		text: message,
-		to: email,
-		subject: `${user_name} successfully join us`,
-		// attachments: [
-		//   {
-		//     content: bufferFile,
-		//     contentType: 'application/pdf',
-		//     filename: 'services-rival.pdf',
-		//   },
-		// ],
-	};
+        <p>Thank you!</p>
+      </div>
+    `,
+  };
 };
 
-const verifySuccessMail = (email, user_name, message) => {
-	// if (!fs.existsSync(path.join(__dirname, '../../assets/files/services-rival.pdf'))) {
-	//   console.error('PDF file not found at:');
-	//   return;
-	// }
+const verifySuccessMail = ({ email, user_name, message }) => {
+  // if (!fs.existsSync(path.join(__dirname, '../../assets/files/services-rival.pdf'))) {
+  //   console.error('PDF file not found at:');
+  //   return;
+  // }
 
-	// const bufferFile = fs.readFileSync(path.join(__dirname, '../../assets/files/services-rival.pdf'));
+  // const bufferFile = fs.readFileSync(path.join(__dirname, '../../assets/files/services-rival.pdf'));
 
-	return {
-		from: process.env.EMAIL_SENDER_ACCOUNT,
-		text: message,
-		to: email,
-		subject: `${user_name} successfully join us`,
-		// attachments: [
-		//   {
-		//     content: bufferFile,
-		//     contentType: 'application/pdf',
-		//     filename: 'services-rival.pdf',
-		//   },
-		// ],
-	};
+  return {
+    from: process.env.EMAIL_SENDER_ACCOUNT,
+    text: message,
+    to: email,
+    subject: `${user_name} successfully verified`,
+    // attachments: [
+    //   {
+    //     content: bufferFile,
+    //     contentType: 'application/pdf',
+    //     filename: 'services-rival.pdf',
+    //   },
+    // ],
+  };
 };
 
 // Send email function
 async function sendPasswordResetEmail(to, token) {
-	const resetLink = `${process.env.FRONTEND_BASE_URL}/reset-password?token=${token}`;
+  const resetLink = `${process.env.FRONTEND_BASE_URL}/reset-password?token=${token}`;
 
-	const mailOptions = {
-		from: process.env.EMAIL_SENDER_ACCOUNT,
-		to: to,
-		subject: "Password Reset Request",
-		html: `
+  const mailOptions = {
+    from: process.env.EMAIL_SENDER_ACCOUNT,
+    to: to,
+    subject: "Password Reset Request",
+    html: `
       <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
         <h2 style="color: #333;">Password Reset Request</h2>
         <p>Hi,</p>
@@ -65,15 +61,15 @@ async function sendPasswordResetEmail(to, token) {
         <p>Thank you!</p>
       </div>
     `,
-	};
+  };
 
-	// Send email
-	let info = await transporter.sendMail(mailOptions);
-	console.log("Message sent: %s", info.messageId);
+  // Send email
+  let info = await transporter.sendMail(mailOptions);
+  console.log("Message sent: %s", info.messageId);
 }
 
 module.exports = {
-	emailVerifyMail,
-	verifySuccessMail,
-  sendPasswordResetEmail
+  verifySuccessMail,
+  sendPasswordResetEmail,
+  emailVerifyMailForApplicant,
 };

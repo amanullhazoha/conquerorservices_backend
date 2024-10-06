@@ -12,11 +12,14 @@ const {
   updateApplication,
   googleOauthCallBack,
   getAllJobApplicants,
+  applicantVerifyByOTP,
   createApplicantBasicInfo,
   updateApplicantBasicInfo,
   getSecureJobApplicantById,
+  applicantVerifyUsingEmail,
   updateApplicantLicenseInfo,
   updateApplicantNidOrCnicInfo,
+  applicantVerifyUsingPassport,
 } = require("./applicant.controller");
 
 module.exports = (app) => {
@@ -80,6 +83,10 @@ module.exports = (app) => {
     validate(jobApplyLicenseSchema),
     updateApplicantLicenseInfo
   );
+
+  app.post("/api/v1/public/identity-by-email", applicantVerifyUsingEmail);
+  app.post("/api/v1/public/identity-by-passport", applicantVerifyUsingPassport);
+  app.post("/api/v1/public/applicant-verify-by-otp", applicantVerifyByOTP);
 
   app.get(
     "/api/v1/public/google-oauth",

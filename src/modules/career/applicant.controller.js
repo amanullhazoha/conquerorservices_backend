@@ -1,9 +1,12 @@
-const path = require("path");
 const { Op } = require("sequelize");
-const Applicant = require(path.join(
-  process.cwd(),
-  "src/modules/career/applicant.model"
-));
+const jwt = require("jsonwebtoken");
+const Applicant = require("./applicant.model");
+const EmailVerifyOTP = require("./emailVerifyOtp");
+const nodemailer = require("../../config/emailService/config");
+const {
+  verifySuccessMail,
+  emailVerifyMailForApplicant,
+} = require("../../config/emailService/template");
 
 const getAllJobApplicants = async (req, res, next) => {
   try {
@@ -316,34 +319,39 @@ const createApplicantBasicInfo = async (req, res, next) => {
       hiring_position,
     } = req.body;
 
-    const applicant = await Applicant.create({
-      first_name,
-      last_name,
-      mother_name,
-      gender,
-      date_of_birth,
-      nationality,
-      email,
-      contact_number,
-      whatsapp_number,
-      position_id,
-      applicant_image,
-      hiring_position:
-        position_id === "52" || position_id === 52 ? hiring_position : null,
+    const [applicant, created] = await Applicant.findOrCreate({
+      where: { email },
+      defaults: {
+        first_name,
+        last_name,
+        mother_name,
+        gender,
+        date_of_birth,
+        nationality,
+        contact_number,
+        whatsapp_number,
+        position_id,
+        applicant_image,
+        hiring_position:
+          position_id === "52" || position_id === 52 ? hiring_position : null,
 
-      zip: "",
-      city: "",
-      country: "",
-      province: "",
-      religion: "",
-      passportno: "",
-      father_name: "",
-      policeStation: "",
-      martialstatus: "",
-      nidorcnicnumber: "",
-      date_of_expiry: null,
-      applicant_passport: "",
+        zip: "",
+        city: "",
+        country: "",
+        province: "",
+        religion: "",
+        passportno: "",
+        father_name: "",
+        policeStation: "",
+        martialstatus: "",
+        nidorcnicnumber: "",
+        date_of_expiry: null,
+        applicant_passport: "",
+      },
     });
+
+    if (!created)
+      return res.status(400).send("You already use this mail for application.");
 
     res.status(201).send(applicant);
   } catch (error) {
@@ -667,6 +675,193 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
   }
 };
 
+const applicantVerifyUsingEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const applicant = await Applicant.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!applicant) return res.status(404).send("Invalid credentials.");
+
+    const alreadySended = await EmailVerifyOTP.findOne({
+      where: { created_by: applicant.id },
+    });
+
+    if (alreadySended) {
+      await EmailVerifyOTP.destroy({ where: { created_by: applicant.id } });
+    }
+
+    let currentDate = new Date();
+    let expire_date = new Date(currentDate.getTime() + 5 * 60000);
+
+    const otpCode = Math.floor(100000 + Math.random() * 900000);
+
+    const emailVerifyOTP = await EmailVerifyOTP.create({
+      expire_date,
+      otp_code: otpCode,
+      email: applicant.email,
+      created_by: applicant.id,
+    });
+
+    const token = jwt.sign(
+      {
+        applicantId: applicant?.id,
+        emailVerifyOtpId: emailVerifyOTP.id,
+      },
+      process.env.COOKIE_PARSER_TOKEN,
+      {
+        expiresIn: process.env.COOKIE_EXPIRE_TIME,
+      }
+    );
+
+    nodemailer(
+      emailVerifyMailForApplicant({
+        email: applicant.email,
+        otp: emailVerifyOTP?.otp_code,
+        user_name: applicant.first_name + " " + applicant?.last_name,
+      })
+    );
+
+    return res.status(200).json({
+      status: "ok",
+      message: `Send OTP Code on this ${applicant?.email}`,
+      data: {
+        expire_date,
+        token: token,
+        email: applicant?.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
+const applicantVerifyUsingPassport = async (req, res, next) => {
+  try {
+    const { passportno, date_of_expiry } = req.body;
+
+    const applicant = await Applicant.findOne({
+      where: {
+        passportno,
+        date_of_expiry: {
+          [Op.eq]: new Date(date_of_expiry),
+        },
+      },
+    });
+
+    if (!applicant) return res.status(404).send("Invalid credentials.");
+
+    const alreadySended = await EmailVerifyOTP.findOne({
+      where: { created_by: applicant.id },
+    });
+
+    if (alreadySended) {
+      await EmailVerifyOTP.destroy({ where: { created_by: applicant.id } });
+    }
+
+    let currentDate = new Date();
+    let expire_date = new Date(currentDate.getTime() + 5 * 60000);
+
+    const otpCode = Math.floor(100000 + Math.random() * 900000);
+
+    const emailVerifyOTP = await EmailVerifyOTP.create({
+      expire_date,
+      otp_code: otpCode,
+      email: applicant.email,
+      created_by: applicant.id,
+    });
+
+    const token = jwt.sign(
+      {
+        applicantId: applicant?.id,
+        emailVerifyOtpId: emailVerifyOTP.id,
+      },
+      process.env.COOKIE_PARSER_TOKEN,
+      {
+        expiresIn: process.env.COOKIE_EXPIRE_TIME,
+      }
+    );
+
+    nodemailer(
+      emailVerifyMailForApplicant({
+        email: applicant.email,
+        otp: emailVerifyOTP?.otp_code,
+        user_name: applicant.first_name + " " + applicant?.last_name,
+      })
+    );
+
+    return res.status(200).json({
+      status: "ok",
+      message: `Send OTP Code on this ${applicant?.email}`,
+      data: {
+        expire_date,
+        token: token,
+        email: applicant?.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
+const applicantVerifyByOTP = async (req, res, next) => {
+  try {
+    const { otp_code, token } = req.body;
+
+    const decodedToken = verifyToken(token, process.env.COOKIE_PARSER_TOKEN);
+
+    const applicant = await Applicant.findOne({
+      where: {
+        id: decodedToken?.applicantId,
+      },
+    });
+
+    if (!applicant) return res.status(404).send("Invalid credentials.");
+
+    const emailVerifyOtp = await EmailVerifyOTP.findOne({
+      where: {
+        otp_code,
+        created_by: decodedToken?.applicantId,
+        id: decodedToken?.emailVerifyOtpId,
+      },
+    });
+
+    if (!emailVerifyOtp) return res.status(404).send("Token is not valid.");
+
+    if (new Date(emailVerifyOtp.expire_date).getTime() < new Date().getTime())
+      return res.status(400).send("Token time is expire.");
+
+    nodemailer(
+      verifySuccessMail({
+        email: applicant?.email,
+        user_name: applicant?.first_name + " " + applicant?.last_name,
+      })
+    );
+
+    await EmailVerifyOTP.destroy({ where: { created_by: applicant.id } });
+
+    return res.status(200).json({
+      status: "ok",
+      message: `Applicant successfully verified`,
+      data: {
+        email: applicant?.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 const googleOauthCallBack = async (req, res, next) => {
   try {
     const user = req?.user;
@@ -700,9 +895,12 @@ module.exports = {
   updateApplication,
   googleOauthCallBack,
   getAllJobApplicants,
+  applicantVerifyByOTP,
   createApplicantBasicInfo,
   updateApplicantBasicInfo,
   getSecureJobApplicantById,
+  applicantVerifyUsingEmail,
   updateApplicantLicenseInfo,
   updateApplicantNidOrCnicInfo,
+  applicantVerifyUsingPassport,
 };
