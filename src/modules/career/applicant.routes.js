@@ -3,6 +3,7 @@ const { upload } = require("../../config/lib/multerConfig");
 const validate = require("../../config/middlewares/validate.middlware");
 const {
   getJobApplicantId,
+  updateApplication,
   googleOauthCallBack,
   getAllJobApplicants,
   createApplicantBasicInfo,
@@ -11,6 +12,7 @@ const {
   updateApplicantNidOrCnicInfo,
 } = require("./applicant.controller");
 const {
+  jobApplicantSchema,
   jobApplyBasicSchema,
   jobApplyLicenseSchema,
   jobApplyNidOrCnicSchema,
@@ -21,7 +23,22 @@ module.exports = (app) => {
 
   app.get("/api/v1/secure/career/jobs/:id", getJobApplicantId);
 
-  app.put("/api/v1/secure/career/jobs/:id", getJobApplicantId);
+  app.put(
+    "/api/v1/secure/career/jobs/:id",
+    upload.fields([
+      { name: "applicant_image", maxCount: 1 },
+      { name: "applicant_resume", maxCount: 1 },
+      { name: "applicant_passport", maxCount: 1 },
+      { name: "nid_cnic_back", maxCount: 1 },
+      { name: "nid_cnic_front", maxCount: 1 },
+      { name: "UAE_DL_Front", maxCount: 1 },
+      { name: "UAE_DL_Back", maxCount: 1 },
+      { name: "appli_dri_lisence_frontpart", maxCount: 1 },
+      { name: "appli_dri_lisence_backpart", maxCount: 1 },
+    ]),
+    validate(jobApplicantSchema),
+    updateApplication
+  );
 
   app.get("/api/v1/public/career/jobs/:id", getJobApplicantId);
 

@@ -10,9 +10,8 @@ const forgotPasswordSchema = Yup.object().shape({
 });
 
 const resetPasswordSchema = Yup.object().shape({
-  new_password: Yup.string().required("Email is required"),
-  confirm_password: Yup.string().required("Email is required"),
-  token_id: Yup.string().required("Token ID is required"),
+  password: Yup.string().required("Email is required"),
+  token: Yup.string().required("Token ID is required"),
 });
 
 module.exports = {
