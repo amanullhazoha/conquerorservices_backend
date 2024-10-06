@@ -1,6 +1,7 @@
 const validate = require("../../config/middlewares/validate.middlware");
 const {
   userLogin,
+  userSignUp,
   //   userEmailVerify,
   userPasswordReset,
   userForgotPassword,
@@ -13,6 +14,7 @@ const {
 
 module.exports = (app) => {
   app.post("/api/v1/public/login", validate(loginSchema), userLogin);
+  app.post("/api/v1/public/sign-up", validate(loginSchema), userSignUp);
 
   app.post(
     "/api/v1/public/forgot-password",

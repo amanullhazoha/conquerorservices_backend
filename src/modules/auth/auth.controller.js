@@ -1,5 +1,6 @@
-const path = require("path");
+const User = require("../user/user.model");
 const nodemailer = require("../../config/emailService/config");
+const EmailVerifyToken = require("../user/emailVerifyToken.model");
 const { emailVerifyMail } = require("../../config/emailService/template");
 const {
   generateAccessToken,
@@ -8,14 +9,6 @@ const {
   hashPassword,
   comparePassword,
 } = require("../../config/lib/hashFunction");
-const User = require(path.join(
-  process.cwd(),
-  "src/modules/career/applicant.model"
-));
-const EmailVerifyToken = require(path.join(
-  process.cwd(),
-  "src/modules/user/emailVerifyToken.model"
-));
 
 const userLogin = async (req, res, next) => {
   try {
@@ -39,6 +32,32 @@ const userLogin = async (req, res, next) => {
   }
 };
 
+const userSignUp = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const passwordHashed = await hashPassword(password);
+
+    const [user, created] = await User.findOrCreate({
+      where: { email },
+      defaults: { password: passwordHashed, role: "super admin" },
+    });
+
+    if (!created) return res.status(400).send("You already have and account.");
+
+    res.status(201).send({
+      message: "user create successfully",
+      data: {
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 const userForgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -51,12 +70,12 @@ const userForgotPassword = async (req, res, next) => {
     let currentDate = new Date();
     let expire_date = new Date(currentDate.getTime() + 5 * 60000);
 
-    const alreadySended = await User.findOne({
+    const alreadySended = await EmailVerifyToken.findOne({
       where: { created_by: user.id },
     });
 
     if (alreadySended) {
-      await VerifyToken.destroy({ where: { created_by: user.id } });
+      await EmailVerifyToken.destroy({ where: { created_by: user.id } });
     }
 
     const emailVerifyToken = await EmailVerifyToken.create({
@@ -143,6 +162,7 @@ const userPasswordReset = async (req, res, next) => {
 
 module.exports = {
   userLogin,
+  userSignUp,
   //   userEmailVerify,
   userPasswordReset,
   userForgotPassword,

@@ -29,6 +29,9 @@ const User = sequelize.define(
       type: DataTypes.ENUM("verified", "unverified"),
       defaultValue: "unverified",
     },
+    password: {
+      type: DataTypes.STRING,
+    },
     phone: {
       type: DataTypes.STRING,
     },
