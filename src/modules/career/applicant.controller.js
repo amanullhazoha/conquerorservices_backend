@@ -8,28 +8,42 @@ const Applicant = require(path.join(
 const getAllJobApplicants = async (req, res, next) => {
   try {
     const searchQuery = req.query.search;
-
-    let applicants;
+    const page = parseInt(req.query.page) || 1;
+    const size = parseInt(req.query.size) || 10;
+    const offset = (page - 1) * size;
 
     if (searchQuery) {
-      applicants = await Applicant.findAll({
-        where: {
-          [Op.or]: [
-            { first_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-            { last_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-            { email: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-            { passportno: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-            { contact_number: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-          ],
-        },
+      whereCondition = {
+        [Op.or]: [
+          { first_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+          { last_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+          { email: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+          { passportno: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+          { contact_number: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+        ],
+      };
+    }
+
+    const { rows: applicants, count: totalRecords } =
+      await Applicant.findAndCountAll({
+        where: whereCondition,
+        limit: size,
+        offset: offset,
         raw: true,
         nest: true,
       });
-    } else {
-      applicants = await Applicant.findAll();
-    }
 
-    res.status(200).send(applicants);
+    const totalPages = Math.ceil(totalRecords / size);
+
+    return res.status(200).json({
+      applicants,
+      meta: {
+        totalRecords,
+        totalPages,
+        currentPage: page,
+        pageSize: size,
+      },
+    });
   } catch (error) {
     console.log(error);
 
