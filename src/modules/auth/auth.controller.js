@@ -1,35 +1,45 @@
+const path = require("path");
 const User = require("../user/user.model");
 const nodemailer = require("../../config/emailService/config");
-const EmailVerifyToken = require("../user/emailVerifyToken.model");
+const jwt = require("jsonwebtoken");
+const { verifyToken } = require("../../config/lib/jwtHelper");
 const { emailVerifyMail } = require("../../config/emailService/template");
 const {
-  generateAccessToken,
+	generateAccessToken,
 } = require("../../config/lib/accessTokenGenerator");
 const {
-  hashPassword,
-  comparePassword,
+	hashPassword,
+	comparePassword,
 } = require("../../config/lib/hashFunction");
+const User = require(path.join(
+	process.cwd(),
+	"src/modules/career/applicant.model"
+));
+const EmailVerifyToken = require(path.join(
+	process.cwd(),
+	"src/modules/user/emailVerifyToken.model"
+));
 
 const userLogin = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+	try {
+		const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+		const user = await User.findOne({ where: { email } });
 
-    if (!user) return res.status(404).send("You have no account.");
+		if (!user) return res.status(404).send("You have no account.");
 
-    const match = await comparePassword(password, user.password);
+		const match = await comparePassword(password, user.password);
 
-    if (!match) throw res.status(404).send("Invalid credentials.");
+		if (!match) throw res.status(404).send("Invalid credentials.");
 
-    const access_token = generateAccessToken(user);
+		const access_token = generateAccessToken(user);
 
-    res.status(201).send({ user, access_token });
-  } catch (error) {
-    console.log(error);
+		res.status(201).send({ user, access_token });
+	} catch (error) {
+		console.log(error);
 
-    next(error);
-  }
+		next(error);
+	}
 };
 
 const userSignUp = async (req, res, next) => {
@@ -59,16 +69,16 @@ const userSignUp = async (req, res, next) => {
 };
 
 const userForgotPassword = async (req, res, next) => {
-  try {
-    const { email } = req.body;
+	try {
+		const { email } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+		const user = await User.findOne({ where: { email } });
 
-    if (!user)
-      return res.status(404).send("You have no account on this email.");
+		if (!user)
+			return res.status(404).send("You have no account on this email.");
 
-    let currentDate = new Date();
-    let expire_date = new Date(currentDate.getTime() + 5 * 60000);
+		let currentDate = new Date();
+		let expire_date = new Date(currentDate.getTime() + 5 * 60000);
 
     const alreadySended = await EmailVerifyToken.findOne({
       where: { created_by: user.id },
@@ -78,70 +88,81 @@ const userForgotPassword = async (req, res, next) => {
       await EmailVerifyToken.destroy({ where: { created_by: user.id } });
     }
 
-    const emailVerifyToken = await EmailVerifyToken.create({
-      expire_date,
-      email: user.email,
-      created_by: user.id,
-    });
+		const emailVerifyToken = await EmailVerifyToken.create({
+			expire_date,
+			email: user.email,
+			created_by: user.id,
+		});
 
-    nodemailer(
-      emailVerifyMail(user.email, user.user_name, emailVerifyToken.id)
-    );
+		const token = jwt.sign(
+			{
+				userId: user?.id,
+				emailVerifyTokenId: emailVerifyToken.id,
+			},
+			process.env.COOKIE_PARSER_TOKEN,
+			{
+				expiresIn: process.env.COOKIE_EXPIRE_TIME,
+			}
+		);
 
-    res.status(201).send({
-      message: "Verify link sent on your mail successfully",
-      data: {
-        expire_date,
-        email: user.email,
-      },
-    });
-  } catch (error) {
-    console.log(error);
+		nodemailer(emailVerifyMail(user.email, user.user_name, token));
 
-    next(error);
-  }
+		res.status(201).send({
+			message: "Verify link sent on your mail successfully",
+			data: {
+				expire_date,
+				email: user.email,
+			},
+		});
+	} catch (error) {
+		console.log(error);
+
+		next(error);
+	}
 };
 
 const userPasswordReset = async (req, res, next) => {
-  try {
-    const { email, token, password } = req.body;
+	try {
+		const { password, token } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const decodedUser = verifyToken(token, process.env.COOKIE_PARSER_TOKEN);
 
-    if (!user) return res.status(404).send("User not found by this email.");
+		const user = await User.findOne({ where: { id: decodedUser.userId } });
 
-    const emailVerifyToken = await EmailVerifyToken.findOne({
-      where: { id: token },
-    });
+		if (!user) return res.status(404).send("User not found by this email.");
 
-    if (!emailVerifyToken) return res.status(404).send("Token is not valid.");
+		const emailVerifyToken = await EmailVerifyToken.findOne({
+			where: { id: decodedUser.emailVerifyTokenId },
+		});
 
-    if (new Date(emailVerifyToken.expire_date).getTime() < new Date().getTime())
-      return res.status(400).send("Token time is expire.");
+		if (!emailVerifyToken) return res.status(404).send("Token is not valid.");
 
-    const hashedPassword = await hashPassword(password);
+		if (new Date(emailVerifyToken.expire_date).getTime() < new Date().getTime())
+			return res.status(400).send("Token time is expire.");
 
-    const userData = {
-      password: hashedPassword,
-    };
+		const hashedPassword = await hashPassword(password);
 
-    await user.update({ password });
+		const userData = {
+			password: hashedPassword,
+		};
 
-    await EmailVerifyToken.destroy({ where: { created_by: user.id } });
+		await user.update(userData);
 
-    const response = {
-      code: 200,
-      message: "Password reset successfully.",
-      data: user,
-      links: req.path,
-    };
+		await EmailVerifyToken.destroy({ where: { created_by: user.id } });
 
-    res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
+		const response = {
+			code: 200,
+			message: "Password reset successfully.",
+			data: user,
+			links: req.path,
+		};
 
-    next(error);
-  }
+		res.status(200).json(response);
+	} catch (error) {
+		console.log(error);
+
+		next(error);
+	}
 };
 
 // const userEmailVerify = async (req, res, next) => {
@@ -161,9 +182,8 @@ const userPasswordReset = async (req, res, next) => {
 // };
 
 module.exports = {
-  userLogin,
-  userSignUp,
-  //   userEmailVerify,
-  userPasswordReset,
-  userForgotPassword,
+	userLogin,
+	//   userEmailVerify,
+	userPasswordReset,
+	userForgotPassword,
 };

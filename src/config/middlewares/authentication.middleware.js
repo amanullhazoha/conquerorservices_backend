@@ -11,7 +11,7 @@ const authenticateUser = async (req, res, next) => {
 		}
 
 		// Verify token and attach the user to the request
-		req.user = verifyToken(token, process.env.JWT_SECRET);
+		req.user = verifyToken(token, process.env.COOKIE_PARSER_TOKEN);
 
 		next();
 	} catch (error) {
