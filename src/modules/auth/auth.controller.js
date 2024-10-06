@@ -22,23 +22,34 @@ const userLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    // Find user by email
     const user = await User.findOne({ where: { email } });
 
-    if (!user) return res.status(404).send("You have no account.");
+    if (!user) {
+      return res.status(404).send("You have no account.");
+    }
 
+    // Compare password
     const match = await comparePassword(password, user.password);
 
-    if (!match) throw res.status(404).send("Invalid credentials.");
+    if (!match) {
+      return res.status(404).send("Invalid credentials.");
+    }
 
+    // Generate access token
     const access_token = generateAccessToken(user);
 
-    res.status(201).send({ user, access_token });
+    // Send success response
+    return res.status(201).send({ user, access_token });
+
   } catch (error) {
     console.log(error);
-
+    
+    // Forward the error to the error handling middleware
     next(error);
   }
 };
+
 
 const userSignUp = async (req, res, next) => {
   try {

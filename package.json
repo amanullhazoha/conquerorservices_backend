@@ -25,5 +25,8 @@
     "passport-google-oauth2": "^0.2.0",
     "sequelize": "^6.37.3",
     "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
