@@ -12,19 +12,26 @@ const serverError = require(path.join(
 module.exports = async () => {
   const app = express();
 
-  const allowedOrigins = process.env.FRONTEND_BASE_URL.split(",");
+  // const allowedOrigins = process.env.FRONTEND_BASE_URL.split(",");
 
-  // Define CORS options
+  // // Define CORS options
+  // const corsOptions = {
+  //   // origin: (origin, callback) => {
+  //   //   // Check if the origin is allowed
+  //   //   if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+  //   //     callback(null, true);
+  //   //   } else {
+  //   //     console.error(`Origin not allowed by CORS: ${origin}`);
+  //   //     callback(new Error("Not allowed by CORS"));
+  //   //   }
+  //   // },
+  //   // methods: "GET,POST,PUT,DELETE",
+  //   // allowedHeaders: "Content-Type,Authorization",
+  //   credentials: true,
+  // };
+
   const corsOptions = {
-    origin: (origin, callback) => {
-      // Check if the origin is allowed
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        callback(null, true);
-      } else {
-        console.error(`Origin not allowed by CORS: ${origin}`);
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: true,
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
     credentials: true,
