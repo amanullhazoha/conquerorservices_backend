@@ -47,8 +47,6 @@ const verifySuccessMail = ({ email, user_name, message }) => {
 const sendPasswordResetEmail = ({ to, token }) => {
 	const resetLink = `${process.env.FRONTEND_BASE_URL}/forgot-password?token=${token}&step=2 `;
 
-	console.log("To: ", to, token);
-
 	const mailOptions = {
 		from: process.env.EMAIL_SENDER_ACCOUNT,
 		to: to,
