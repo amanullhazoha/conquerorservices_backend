@@ -1068,7 +1068,7 @@ const googleOauthCallBack = async (req, res, next) => {
     );
 
     res.redirect(
-      `${process.env.GOOGLE_OAUTH_SUCCESS_REDIRECT}?success=${token}`
+      `${process.env.GOOGLE_OAUTH_SUCCESS_REDIRECT}/applicant-verified?success=${token}`
     );
   } catch (error) {
     next(error);
