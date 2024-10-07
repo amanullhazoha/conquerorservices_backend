@@ -807,7 +807,10 @@ const applicantVerifyUsingPassport = async (req, res, next) => {
       },
     });
 
-    if (!applicant) return res.status(404).send("Invalid credentials.");
+    if (!applicant)
+      return res.status(404).json({
+        message: "Invalid credentials.",
+      });
 
     const alreadySended = await EmailVerifyOTP.findOne({
       where: { created_by: applicant.id },
@@ -966,6 +969,58 @@ const checkApplicantValidToken = async (req, res, next) => {
   }
 };
 
+const applicantIdentifySuccessFully = async (req, res, next) => {
+  try {
+    const token = req.params.token;
+
+    const decodedToken = verifyToken(token, process.env.COOKIE_PARSER_TOKEN);
+
+    if (decodedToken?.error) {
+      return res.status(400).json({
+        email: "",
+        message: "Token is not valid.",
+      });
+    }
+
+    const applicant = await Applicant.findOne({
+      where: {
+        id: decodedToken?.applicantId,
+      },
+    });
+
+    const emailVerifyOtp = await EmailVerifyOTP.findOne({
+      where: {
+        id: decodedToken?.emailVerifyOtpId,
+      },
+    });
+
+    if (!emailVerifyOtp)
+      return res.status(404).json({
+        email: "",
+        message: "Token is not valid.",
+      });
+
+    if (new Date(emailVerifyOtp.expire_date).getTime() < new Date().getTime())
+      return res
+        .status(400)
+        .json({ email: applicant?.email, message: "Token time is expire." });
+
+    return res.status(200).json({
+      status: "ok",
+      message: `Token is valid`,
+      data: {
+        token: token,
+        email: applicant?.email,
+        expire_date: emailVerifyOtp?.expire_date,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 const googleOauthCallBack = async (req, res, next) => {
   try {
     const user = req?.user;
@@ -1010,4 +1065,5 @@ module.exports = {
   updateApplicantLicenseInfo,
   updateApplicantNidOrCnicInfo,
   applicantVerifyUsingPassport,
+  applicantIdentifySuccessFully,
 };
