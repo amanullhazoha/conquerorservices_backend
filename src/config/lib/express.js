@@ -30,15 +30,16 @@ module.exports = async () => {
   //   credentials: true,
   // };
 
-  const corsOptions = {
-    origin: /https:\/\/.*\.conquerror\.com/,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-    optionsSuccessStatus: 204,
-  };
+  app.use(
+    cors({
+      origin: ["https://apply.conquerror.com", "https://portal.conquerror.com"],
+      methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+      credentials: true,
+    })
+  );
 
   // Use the cors middleware with the defined options
-  app.use(cors(corsOptions));
+  // app.use(cors(corsOptions));
 
   app.set("trust proxy", true);
 
