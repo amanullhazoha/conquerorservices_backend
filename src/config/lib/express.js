@@ -46,7 +46,7 @@ module.exports = async () => {
   app.use(express.json({ limit: "100mb" }));
   app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
-  app.options("*", cors(corsOptions));
+  // app.options("*", cors(corsOptions));
 
   app.use(cookieParser(process.env.COOKIE_PARSER_TOKEN));
   app.use(
