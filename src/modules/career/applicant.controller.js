@@ -203,6 +203,16 @@ const updateApplication = async (req, res, next) => {
       ref2_address,
     } = req.body;
 
+    const existEmail = await Applicant.findOne({
+      where: { email, id: { [Op.ne]: id } },
+    });
+
+    if (existEmail) {
+      return res
+        .status(400)
+        .send("Email is already in use by another applicant.");
+    }
+
     const applicant = await Applicant.findOne({ where: { id } });
 
     if (!applicant) return res.status(404).send("Data not found by Id.");
@@ -387,6 +397,16 @@ const updateApplicantBasicInfo = async (req, res, next) => {
       position_id,
       hiring_position,
     } = req.body;
+
+    const existEmail = await Applicant.findOne({
+      where: { email, id: { [Op.ne]: id } },
+    });
+
+    if (existEmail) {
+      return res
+        .status(400)
+        .send("Email is already in use by another applicant.");
+    }
 
     const applicant = await Applicant.findOne({ where: { id } });
 
@@ -903,6 +923,10 @@ const applicantVerifyByOTP = async (req, res, next) => {
 
     await EmailVerifyOTP.destroy({ where: { created_by: applicant.id } });
 
+    if (applicant.email_verify !== "verified") {
+      await applicant.update({ email_verify: "verified" });
+    }
+
     return res.status(200).json({
       status: "ok",
       message: `Applicant successfully verified`,
@@ -988,30 +1012,19 @@ const applicantIdentifySuccessFully = async (req, res, next) => {
       },
     });
 
-    const emailVerifyOtp = await EmailVerifyOTP.findOne({
-      where: {
-        id: decodedToken?.emailVerifyOtpId,
-      },
-    });
-
-    if (!emailVerifyOtp)
-      return res.status(404).json({
-        email: "",
-        message: "Token is not valid.",
-      });
-
-    if (new Date(emailVerifyOtp.expire_date).getTime() < new Date().getTime())
+    if (applicant?.email_verify !== "verified")
       return res
         .status(400)
-        .json({ email: applicant?.email, message: "Token time is expire." });
+        .json({ email: applicant?.email, message: "Email is not verified." });
 
     return res.status(200).json({
       status: "ok",
-      message: `Token is valid`,
+      message: `Applicant data verified`,
       data: {
-        token: token,
         email: applicant?.email,
-        expire_date: emailVerifyOtp?.expire_date,
+        passportno: applicant?.passportno,
+        submissionid: applicant.submissionid,
+        name: applicant?.first_name + " " + applicant?.last_name,
       },
     });
   } catch (error) {
@@ -1025,27 +1038,38 @@ const googleOauthCallBack = async (req, res, next) => {
   try {
     const user = req?.user;
 
-    console.log(user);
+    const applicant = await Applicant.findOne({
+      where: {
+        id: user?.id,
+      },
+    });
 
-    const payload = {
-      id: user.id,
-      user_name: user.user_name,
-      email: user.email,
-    };
+    if (!applicant) return res.status(404).send("Invalid credentials.");
 
-    // const accessToken = generateAccessToken(payload);
+    nodemailer(
+      verifySuccessMail({
+        email: applicant?.email,
+        user_name: applicant?.first_name + " " + applicant?.last_name,
+      })
+    );
 
-    // nodemailer(contactMail(user.email, user.user_name, "Login successfully"));
+    if (applicant.email_verify !== "verified") {
+      await applicant.update({ email_verify: "verified" });
+    }
 
-    // res.cookie("access_token", accessToken, {
-    //   httpOnly: true,
-    //   signed: true,
-    //   secure: true,
-    //   sameSite: "None",
-    //   domain: process.env.FRONTEND_DOMAIN,
-    // });
+    const token = jwt.sign(
+      {
+        applicantId: applicant?.id,
+      },
+      process.env.COOKIE_PARSER_TOKEN,
+      {
+        expiresIn: process.env.COOKIE_EXPIRE_TIME,
+      }
+    );
 
-    res.redirect(process.env.GOOGLE_OAUTH_SUCCESS_REDIRECT);
+    res.redirect(
+      `${process.env.GOOGLE_OAUTH_SUCCESS_REDIRECT}?success=${token}`
+    );
   } catch (error) {
     next(error);
   }
