@@ -31,10 +31,10 @@ module.exports = async () => {
   // };
 
   const corsOptions = {
-    origin: true,
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
+    origin: /https:\/\/.*\.conquerror\.com/,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
+    optionsSuccessStatus: 204,
   };
 
   // Use the cors middleware with the defined options
