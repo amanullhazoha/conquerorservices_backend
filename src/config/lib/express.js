@@ -37,6 +37,7 @@ module.exports = async () => {
         "https://apply.conquerror.com",
         "https://portal.conquerror.com",
         "http://localhost:5173",
+        "http://localhost:3000",
       ],
       methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
       credentials: true,
