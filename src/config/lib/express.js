@@ -33,7 +33,11 @@ module.exports = async () => {
   app.use(
     cors({
       // origin: true,
-      origin: ["https://apply.conquerror.com", "https://portal.conquerror.com", "http://localhost:5173"],
+      origin: [
+        "https://apply.conquerror.com",
+        "https://portal.conquerror.com",
+        "http://localhost:5173",
+      ],
       methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
       credentials: true,
     })
