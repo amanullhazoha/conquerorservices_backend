@@ -760,7 +760,7 @@ const applicantVerifyUsingEmail = async (req, res, next) => {
     if (!applicant)
       return res.status(404).json({
         email,
-        message: "Invalid credentials.",
+        message: "Your email is not valid.",
       });
 
     const alreadySended = await EmailVerifyOTP.findOne({
@@ -904,7 +904,8 @@ const applicantVerifyByOTP = async (req, res, next) => {
       },
     });
 
-    if (!applicant) return res.status(404).send("Invalid credentials.");
+    if (!applicant)
+      return res.status(404).json({ message: "Invalid credentials." });
 
     const emailVerifyOtp = await EmailVerifyOTP.findOne({
       where: {
@@ -914,7 +915,10 @@ const applicantVerifyByOTP = async (req, res, next) => {
       },
     });
 
-    if (!emailVerifyOtp) return res.status(404).send("Token is not valid.");
+    if (!emailVerifyOtp)
+      return res
+        .status(404)
+        .json({ message: "OTP code or token is not valid." });
 
     if (new Date(emailVerifyOtp.expire_date).getTime() < new Date().getTime())
       return res.status(400).send("Token time is expire.");
