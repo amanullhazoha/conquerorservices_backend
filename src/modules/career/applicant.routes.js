@@ -21,6 +21,7 @@ const {
   updateApplicantLicenseInfo,
   updateApplicantNidOrCnicInfo,
   applicantVerifyUsingPassport,
+  applicantIdentifySuccessFully,
 } = require("./applicant.controller");
 
 module.exports = (app) => {
@@ -91,6 +92,10 @@ module.exports = (app) => {
   app.get(
     "/api/v1/public/check-applicant-token/:token",
     checkApplicantValidToken
+  );
+  app.get(
+    "/api/v1/public/applicant-identify-successfully/:token",
+    applicantIdentifySuccessFully
   );
 
   app.get(

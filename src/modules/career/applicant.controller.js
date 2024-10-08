@@ -204,6 +204,16 @@ const updateApplication = async (req, res, next) => {
 			ref2_address,
 		} = req.body;
 
+		const existEmail = await Applicant.findOne({
+			where: { email, id: { [Op.ne]: id } },
+		});
+
+		if (existEmail) {
+			return res
+				.status(400)
+				.send("Email is already in use by another applicant.");
+		}
+
 		const applicant = await Applicant.findOne({ where: { id } });
 
 		if (!applicant) return res.status(404).send("Data not found by Id.");
@@ -388,6 +398,16 @@ const updateApplicantBasicInfo = async (req, res, next) => {
 			position_id,
 			hiring_position,
 		} = req.body;
+
+		const existEmail = await Applicant.findOne({
+			where: { email, id: { [Op.ne]: id } },
+		});
+
+		if (existEmail) {
+			return res
+				.status(400)
+				.send("Email is already in use by another applicant.");
+		}
 
 		const applicant = await Applicant.findOne({ where: { id } });
 
@@ -808,6 +828,10 @@ const applicantVerifyUsingPassport = async (req, res, next) => {
 			},
 		});
 
+		if (!applicant)
+			return res.status(404).json({
+				message: "Invalid credentials.",
+			});
 		if (!applicant) return res.status(404).send("Invalid credentials.");
 
 		const alreadySended = await EmailVerifyOTP.findOne({
@@ -901,6 +925,10 @@ const applicantVerifyByOTP = async (req, res, next) => {
 
 		await EmailVerifyOTP.destroy({ where: { created_by: applicant.id } });
 
+		if (applicant.email_verify !== "verified") {
+			await applicant.update({ email_verify: "verified" });
+		}
+
 		return res.status(200).json({
 			status: "ok",
 			message: `Applicant successfully verified`,
@@ -967,31 +995,83 @@ const checkApplicantValidToken = async (req, res, next) => {
 	}
 };
 
+const applicantIdentifySuccessFully = async (req, res, next) => {
+	try {
+		const token = req.params.token;
+
+		const decodedToken = verifyToken(token, process.env.COOKIE_PARSER_TOKEN);
+
+		if (decodedToken?.error) {
+			return res.status(400).json({
+				email: "",
+				message: "Token is not valid.",
+			});
+		}
+
+		const applicant = await Applicant.findOne({
+			where: {
+				id: decodedToken?.applicantId,
+			},
+		});
+
+		if (applicant?.email_verify !== "verified")
+			return res
+				.status(400)
+				.json({ email: applicant?.email, message: "Email is not verified." });
+
+		return res.status(200).json({
+			status: "ok",
+			message: `Applicant data verified`,
+			data: {
+				email: applicant?.email,
+				passportno: applicant?.passportno,
+				submissionid: applicant.submissionid,
+				name: applicant?.first_name + " " + applicant?.last_name,
+			},
+		});
+	} catch (error) {
+		console.log(error);
+
+		next(error);
+	}
+};
+
 const googleOauthCallBack = async (req, res, next) => {
 	try {
 		const user = req?.user;
 
-		console.log(user);
+		const applicant = await Applicant.findOne({
+			where: {
+				id: user?.id,
+			},
+		});
 
-		const payload = {
-			id: user.id,
-			user_name: user.user_name,
-			email: user.email,
-		};
+		if (!applicant) return res.status(404).send("Invalid credentials.");
 
-		// const accessToken = generateAccessToken(payload);
+		nodemailer(
+			verifySuccessMail({
+				email: applicant?.email,
+				user_name: applicant?.first_name + " " + applicant?.last_name,
+			})
+		);
 
-		// nodemailer(contactMail(user.email, user.user_name, "Login successfully"));
+		if (applicant.email_verify !== "verified") {
+			await applicant.update({ email_verify: "verified" });
+		}
 
-		// res.cookie("access_token", accessToken, {
-		//   httpOnly: true,
-		//   signed: true,
-		//   secure: true,
-		//   sameSite: "None",
-		//   domain: process.env.FRONTEND_DOMAIN,
-		// });
+		const token = jwt.sign(
+			{
+				applicantId: applicant?.id,
+			},
+			process.env.COOKIE_PARSER_TOKEN,
+			{
+				expiresIn: process.env.COOKIE_EXPIRE_TIME,
+			}
+		);
 
-		res.redirect(process.env.GOOGLE_OAUTH_SUCCESS_REDIRECT);
+		res.redirect(
+			`${process.env.GOOGLE_OAUTH_SUCCESS_REDIRECT}applicant-verified?success=${token}`
+		);
 	} catch (error) {
 		next(error);
 	}
@@ -1011,4 +1091,5 @@ module.exports = {
 	updateApplicantLicenseInfo,
 	updateApplicantNidOrCnicInfo,
 	applicantVerifyUsingPassport,
+	applicantIdentifySuccessFully,
 };
