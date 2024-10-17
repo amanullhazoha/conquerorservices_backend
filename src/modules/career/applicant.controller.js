@@ -9,6 +9,25 @@ const {
   emailVerifyMailForApplicant,
 } = require("../../config/emailService/template");
 
+const getJobApplicantMailCheck = async (req, res, next) => {
+  try {
+    const email = req?.query?.email;
+
+    if (!email) res.status(400).json({ message: "Please input a email first" });
+
+    const jobApplicant = await Applicant.findOne({ where: { email } });
+
+    if (jobApplicant)
+      return res.status(404).json({ message: "This email already used" });
+
+    res.status(200).send(jobApplicant);
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 const getAllJobApplicants = async (req, res, next) => {
   try {
     const searchQuery = req.query.search;
@@ -573,7 +592,8 @@ const updateApplicantNidOrCnicInfo = async (req, res, next) => {
 
     const applicant = await Applicant.findOne({ where: { id } });
 
-    if (!applicant) return res.status(404).send("Data not found by Id.");
+    if (!applicant)
+      return res.status(404).json({ message: "Data not found by Id." });
 
     await applicant.update({
       zip,
@@ -664,7 +684,8 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
 
     const applicant = await Applicant.findOne({ where: { id } });
 
-    if (!applicant) return res.status(404).send("Data not found by Id.");
+    if (!applicant)
+      return res.status(404).json({ message: "Data not found by Id." });
 
     await applicant.update({
       is_agree,
@@ -696,7 +717,7 @@ const updateApplicantLicenseInfo = async (req, res, next) => {
 
     if (applicant?.email_verify === "initiate") {
       let currentDate = new Date();
-      let expire_date = new Date(currentDate.getTime() + 5 * 60000);
+      let expire_date = new Date(currentDate.getTime() + 3 * 60000);
 
       const otpCode = Math.floor(100000 + Math.random() * 900000);
 
@@ -772,7 +793,7 @@ const applicantVerifyUsingEmail = async (req, res, next) => {
     }
 
     let currentDate = new Date();
-    let expire_date = new Date(currentDate.getTime() + 5 * 60000);
+    let expire_date = new Date(currentDate.getTime() + 3 * 60000);
 
     const otpCode = Math.floor(100000 + Math.random() * 900000);
 
@@ -835,7 +856,9 @@ const applicantVerifyUsingPassport = async (req, res, next) => {
       return res.status(404).json({
         message: "Invalid credentials.",
       });
-    if (!applicant) return res.status(404).send("Invalid credentials.");
+
+    if (!applicant)
+      return res.status(404).json({ message: "Invalid credentials." });
 
     const alreadySended = await EmailVerifyOTP.findOne({
       where: { created_by: applicant.id },
@@ -846,7 +869,7 @@ const applicantVerifyUsingPassport = async (req, res, next) => {
     }
 
     let currentDate = new Date();
-    let expire_date = new Date(currentDate.getTime() + 5 * 60000);
+    let expire_date = new Date(currentDate.getTime() + 3 * 60000);
 
     const otpCode = Math.floor(100000 + Math.random() * 900000);
 
@@ -1053,7 +1076,8 @@ const googleOauthCallBack = async (req, res, next) => {
       },
     });
 
-    if (!applicant) return res.status(404).send("Invalid credentials.");
+    if (!applicant)
+      return res.status(404).json({ message: "Invalid credentials." });
 
     nodemailer(
       verifySuccessMail({
@@ -1090,6 +1114,7 @@ module.exports = {
   googleOauthCallBack,
   getAllJobApplicants,
   applicantVerifyByOTP,
+  getJobApplicantMailCheck,
   checkApplicantValidToken,
   createApplicantBasicInfo,
   updateApplicantBasicInfo,

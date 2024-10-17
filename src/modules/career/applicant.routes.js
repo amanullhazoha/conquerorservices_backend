@@ -13,6 +13,7 @@ const {
   googleOauthCallBack,
   getAllJobApplicants,
   applicantVerifyByOTP,
+  getJobApplicantMailCheck,
   checkApplicantValidToken,
   createApplicantBasicInfo,
   updateApplicantBasicInfo,
@@ -25,6 +26,8 @@ const {
 } = require("./applicant.controller");
 
 module.exports = (app) => {
+  app.get("/api/v1/public/career/jobs/mail-check", getJobApplicantMailCheck);
+
   app.get("/api/v1/secure/career/jobs", getAllJobApplicants);
 
   app.get("/api/v1/secure/career/jobs/:id", getSecureJobApplicantById);
