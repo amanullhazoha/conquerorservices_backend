@@ -138,7 +138,9 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
         <body>
           <div class="email-container">
             <div class="email-header">
-              <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" style="display: block;" onerror="this.onerror=null; this.src='image.svg';" />
+              <a href="https://apply.conquerror.com">
+                <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" width="150" height="40" />
+              </a>
             </div>
 
             <div class="email-body">
@@ -266,25 +268,25 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
               </div>
             </div>
           </div>
+          
+          <script>
+            function copyToClipboard() {
+              const otpCode = document.getElementById('otp-code').innerText;
+  
+              const tempInput = document.createElement('textarea');
+              tempInput.value = otpCode;
+              document.body.appendChild(tempInput);
+  
+  
+              tempInput.select();
+              tempInput.setSelectionRange(0, 99999);
+  
+              document.execCommand('copy');
+  
+              document.body.removeChild(tempInput);
+            }
+          </script>
         </body>
-
-        <script>
-          function copyToClipboard() {
-            const otpCode = document.getElementById('otp-code').innerText;
-
-            const tempInput = document.createElement('textarea');
-            tempInput.value = otpCode;
-            document.body.appendChild(tempInput);
-
-
-            tempInput.select();
-            tempInput.setSelectionRange(0, 99999);
-
-            document.execCommand('copy');
-
-            document.body.removeChild(tempInput);
-          }
-        </script>
       </html>
     `,
   };
