@@ -138,7 +138,7 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
         <body>
           <div class="email-container">
             <div class="email-header">
-              <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" />
+              <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" style="display: block;" onerror="this.onerror=null; this.src='image.svg';" />
             </div>
 
             <div class="email-body">
