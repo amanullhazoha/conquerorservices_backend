@@ -68,11 +68,11 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
             }
 
             .otp {
-              padding: 24px 0;
-              display: flex;
               gap: 12px;
-              justify-content: center;
+              display: flex;
+              padding: 24px 0;
               align-items: center;
+              justify-content: center;
             }
 
             .otp p {
