@@ -11,11 +11,19 @@ const {
 
 const getJobApplicantMailCheck = async (req, res, next) => {
   try {
+    const id = req?.query?.id;
     const email = req?.query?.email;
 
-    if (!email) res.status(400).json({ message: "Please input a email first" });
+    const options = { email };
 
-    const jobApplicant = await Applicant.findOne({ where: { email } });
+    if (id) {
+      options.id = { [Op.ne]: id };
+    }
+
+    if (!email)
+      return res.status(400).json({ message: "Please input a email first" });
+
+    const jobApplicant = await Applicant.findOne({ where: options });
 
     if (jobApplicant)
       return res.status(404).json({ message: "This email already used" });
