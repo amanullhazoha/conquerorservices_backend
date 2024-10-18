@@ -1,6 +1,3 @@
-const fs = require("fs");
-const path = require("path");
-
 const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
   return {
     from: process.env.EMAIL_SENDER_ACCOUNT,
@@ -290,27 +287,10 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
         </script>
       </html>
     `,
-    // 	html: `
-    //   <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
-    //     <h2 style="color: #333;">Email Verification OTP code</h2>
-    //     <p>Hi ${user_name}</p>
-
-    // 	<h3>${otp}</h3>
-
-    //     <p>Thank you!</p>
-    //   </div>
-    // `,
   };
 };
 
 const verifySuccessMail = ({ email, user_name, message }) => {
-  // if (!fs.existsSync(path.join(__dirname, '../../assets/files/services-rival.pdf'))) {
-  //   console.error('PDF file not found at:');
-  //   return;
-  // }
-
-  // const bufferFile = fs.readFileSync(path.join(__dirname, '../../assets/files/services-rival.pdf'));
-
   return {
     from: process.env.EMAIL_SENDER_ACCOUNT,
     text: message,
@@ -598,18 +578,9 @@ const verifySuccessMail = ({ email, user_name, message }) => {
         </body>
       </html>
     `,
-
-    // attachments: [
-    //   {
-    //     content: bufferFile,
-    //     contentType: 'application/pdf',
-    //     filename: 'services-rival.pdf',
-    //   },
-    // ],
   };
 };
 
-// Send email function
 const sendPasswordResetEmail = ({ to, token }) => {
   const resetLink = `${process.env.FRONTEND_PORTAL_BASE_URL}/forgot-password?token=${token}&step=2 `;
 
