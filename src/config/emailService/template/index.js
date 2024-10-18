@@ -139,7 +139,7 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
           <div class="email-container">
             <div class="email-header">
               <a href="https://apply.conquerror.com">
-                <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" width="150" height="40" />
+                <img src="https://www.capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" width="150" height="40" />
               </a>
             </div>
 
@@ -268,7 +268,7 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
               </div>
             </div>
           </div>
-          
+
           <script>
             function copyToClipboard() {
               const otpCode = document.getElementById('otp-code').innerText;

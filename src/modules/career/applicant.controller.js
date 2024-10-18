@@ -1033,6 +1033,96 @@ const checkApplicantValidToken = async (req, res, next) => {
   }
 };
 
+const jobApplicantChangeMail = async (req, res, next) => {
+  try {
+    const { email, token } = req.body;
+
+    const decodedToken = verifyToken(token, process.env.COOKIE_PARSER_TOKEN);
+
+    if (decodedToken?.error) {
+      return res.status(400).json({
+        email: "",
+        message: "Token is not valid.",
+      });
+    }
+
+    const applicant = await Applicant.findOne({
+      where: {
+        id: decodedToken?.applicantId,
+      },
+    });
+
+    if (!applicant)
+      return res.status(404).json({ message: "Application not found." });
+
+    const options = { email };
+
+    if (applicant) {
+      options.id = { [Op.ne]: applicant?.id };
+    }
+
+    const jobApplicant = await Applicant.findOne({ where: options });
+
+    if (jobApplicant)
+      return res.status(404).json({ message: "This email already used" });
+
+    await applicant.update({ email });
+
+    const alreadySended = await EmailVerifyOTP.findOne({
+      where: { created_by: applicant.id },
+    });
+
+    if (alreadySended) {
+      await EmailVerifyOTP.destroy({ where: { created_by: applicant.id } });
+    }
+
+    let currentDate = new Date();
+    let expire_date = new Date(currentDate.getTime() + 3 * 60000);
+
+    const otpCode = Math.floor(100000 + Math.random() * 900000);
+
+    const emailVerifyOTP = await EmailVerifyOTP.create({
+      expire_date,
+      otp_code: otpCode,
+      email: applicant.email,
+      created_by: applicant.id,
+    });
+
+    const jwt_token = jwt.sign(
+      {
+        applicantId: applicant?.id,
+        emailVerifyOtpId: emailVerifyOTP.id,
+      },
+      process.env.COOKIE_PARSER_TOKEN,
+      {
+        expiresIn: process.env.COOKIE_EXPIRE_TIME,
+      }
+    );
+
+    nodemailer(
+      emailVerifyMailForApplicant({
+        email: applicant.email,
+        otp: emailVerifyOTP?.otp_code,
+        user_name: applicant.first_name + " " + applicant?.last_name,
+      })
+    );
+
+    return res.status(200).json({
+      status: "ok",
+      message: `Send OTP Code on this ${applicant?.email}`,
+      data: {
+        expire_date,
+        token: jwt_token,
+        email: applicant?.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 const applicantIdentifySuccessFully = async (req, res, next) => {
   try {
     const token = req.params.token;
@@ -1122,6 +1212,7 @@ module.exports = {
   googleOauthCallBack,
   getAllJobApplicants,
   applicantVerifyByOTP,
+  jobApplicantChangeMail,
   getJobApplicantMailCheck,
   checkApplicantValidToken,
   createApplicantBasicInfo,
