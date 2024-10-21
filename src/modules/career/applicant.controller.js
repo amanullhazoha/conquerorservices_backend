@@ -849,24 +849,22 @@ const applicantVerifyUsingEmail = async (req, res, next) => {
 
 const applicantVerifyUsingPassport = async (req, res, next) => {
   try {
-    const { passportno, date_of_expiry } = req.body;
+    const { passportno, date_of_birth } = req.body;
 
     const applicant = await Applicant.findOne({
       where: {
         passportno,
-        date_of_expiry: {
-          [Op.eq]: new Date(date_of_expiry),
+        date_of_birth: {
+          [Op.eq]: new Date(date_of_birth),
         },
       },
     });
 
     if (!applicant)
       return res.status(404).json({
-        message: "Invalid credentials.",
+        message:
+          "Applicant information not found. Please enter your valid Passport Number and Date of Birth, and try again.",
       });
-
-    if (!applicant)
-      return res.status(404).json({ message: "Invalid credentials." });
 
     const alreadySended = await EmailVerifyOTP.findOne({
       where: { created_by: applicant.id },
@@ -936,7 +934,10 @@ const applicantVerifyByOTP = async (req, res, next) => {
     });
 
     if (!applicant)
-      return res.status(404).json({ message: "Invalid credentials." });
+      return res.status(404).json({
+        message:
+          "Applicant information not found. Please input your Passport Number and Date of Birth.",
+      });
 
     const emailVerifyOtp = await EmailVerifyOTP.findOne({
       where: {
@@ -1064,7 +1065,9 @@ const jobApplicantChangeMail = async (req, res, next) => {
     const jobApplicant = await Applicant.findOne({ where: options });
 
     if (jobApplicant)
-      return res.status(404).json({ message: "This email already used" });
+      return res.status(404).json({
+        message: "This email already exist. Please verify your email",
+      });
 
     await applicant.update({ email });
 
