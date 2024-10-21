@@ -855,7 +855,7 @@ const applicantVerifyUsingPassport = async (req, res, next) => {
       where: {
         passportno,
         date_of_birth: {
-          [Op.eq]: new Date(date_of_birth),
+          [Op.eq]: date_of_birth,
         },
       },
     });
