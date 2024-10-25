@@ -3,7 +3,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require(path.join(process.cwd(), "src/config/db/sequelize"));
 
 const EmailVerifyToken = sequelize.define(
-  "emailVerifyTokens",
+  "emailverifytokens",
   {
     id: {
       type: DataTypes.BIGINT.UNSIGNED,
@@ -21,7 +21,7 @@ const EmailVerifyToken = sequelize.define(
     },
   },
   {
-    tableName: "emailVerifyTokens",
+    tableName: "emailverifytokens",
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at",
