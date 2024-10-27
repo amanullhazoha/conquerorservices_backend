@@ -8,13 +8,14 @@ const {
 } = require("./auth.controller");
 const {
   loginSchema,
+  signupSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
 } = require("./auth.schema");
 
 module.exports = (app) => {
   app.post("/api/v1/public/login", validate(loginSchema), userLogin);
-  app.post("/api/v1/public/sign-up", validate(loginSchema), userSignUp);
+  app.post("/api/v1/public/sign-up", validate(signupSchema), userSignUp);
 
   app.post(
     "/api/v1/public/forgot-password",

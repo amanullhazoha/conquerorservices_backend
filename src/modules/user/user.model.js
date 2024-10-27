@@ -133,7 +133,17 @@ const User = sequelize.define(
       type: DataTypes.BOOLEAN,
     },
     role: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM(
+        "super_admin",
+        "group_admin",
+        "admin",
+        "supervisor",
+        "manager",
+        "checker",
+        "operator",
+        "user"
+      ),
+      defaultValue: "user",
     },
   },
   {

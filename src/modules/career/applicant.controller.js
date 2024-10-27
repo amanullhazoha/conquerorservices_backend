@@ -44,14 +44,157 @@ const getAllJobApplicants = async (req, res, next) => {
     const offset = (page - 1) * size;
 
     let whereCondition;
+
+    if (req?.user?.role === "checker") {
+      whereCondition = {
+        country: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
+      };
+    }
+
     if (searchQuery) {
       whereCondition = {
-        [Op.or]: [
-          { first_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-          { last_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-          { email: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-          { passportno: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
-          { contact_number: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+        [Op.and]: [
+          whereCondition,
+          {
+            [Op.or]: [
+              { first_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { last_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { email: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { passportno: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              {
+                contact_number: { [Op.like]: `%${searchQuery.toLowerCase()}%` },
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    const { rows: applicants, count: totalRecords } =
+      await Applicant.findAndCountAll({
+        where: whereCondition,
+        limit: size,
+        offset: offset,
+        raw: true,
+        nest: true,
+      });
+
+    const totalPages = Math.ceil(totalRecords / size);
+
+    return res.status(200).json({
+      applicants,
+      meta: {
+        totalRecords,
+        totalPages,
+        currentPage: page,
+        pageSize: size,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
+const getAllNewApplicants = async (req, res, next) => {
+  try {
+    const searchQuery = req.query.search;
+    const page = parseInt(req.query.page) || 1;
+    const size = parseInt(req.query.size) || 10;
+    const offset = (page - 1) * size;
+
+    let whereCondition = { applicant_status: "new_entry" };
+
+    if (req?.user?.role === "checker") {
+      whereCondition = {
+        ...whereCondition,
+        country: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
+      };
+    }
+
+    if (searchQuery) {
+      whereCondition = {
+        [Op.and]: [
+          whereCondition,
+          {
+            [Op.or]: [
+              { first_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { last_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { email: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { passportno: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              {
+                contact_number: { [Op.like]: `%${searchQuery.toLowerCase()}%` },
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    const { rows: applicants, count: totalRecords } =
+      await Applicant.findAndCountAll({
+        where: whereCondition,
+        limit: size,
+        offset: offset,
+        raw: true,
+        nest: true,
+      });
+
+    const totalPages = Math.ceil(totalRecords / size);
+
+    return res.status(200).json({
+      applicants,
+      meta: {
+        totalRecords,
+        totalPages,
+        currentPage: page,
+        pageSize: size,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
+const getAllInterviewApplicants = async (req, res, next) => {
+  try {
+    const searchQuery = req.query.search;
+    const page = parseInt(req.query.page) || 1;
+    const size = parseInt(req.query.size) || 10;
+    const offset = (page - 1) * size;
+    const status = req.query.status
+      ? req.query.status
+      : {
+          [Op.in]: ["accepted", "hired", "pending", "under_review", "rejected"],
+        };
+
+    let whereCondition = { applicant_status: status };
+
+    if (req?.user?.role === "checker") {
+      whereCondition = {
+        ...whereCondition,
+        country: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
+      };
+    }
+
+    if (searchQuery) {
+      whereCondition = {
+        [Op.and]: [
+          whereCondition,
+          {
+            [Op.or]: [
+              { first_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { last_name: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { email: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              { passportno: { [Op.like]: `%${searchQuery.toLowerCase()}%` } },
+              {
+                contact_number: { [Op.like]: `%${searchQuery.toLowerCase()}%` },
+              },
+            ],
+          },
         ],
       };
     }
@@ -1213,12 +1356,14 @@ module.exports = {
   getJobApplicantId,
   updateApplication,
   googleOauthCallBack,
+  getAllNewApplicants,
   getAllJobApplicants,
   applicantVerifyByOTP,
   jobApplicantChangeMail,
   getJobApplicantMailCheck,
   checkApplicantValidToken,
   createApplicantBasicInfo,
+  getAllInterviewApplicants,
   updateApplicantBasicInfo,
   getSecureJobApplicantById,
   applicantVerifyUsingEmail,

@@ -2,6 +2,12 @@ const passport = require("passport");
 const { upload } = require("../../config/lib/multerConfig");
 const validate = require("../../config/middlewares/validate.middlware");
 const {
+  authenticationMiddleware,
+} = require("../../config/middlewares/authentication.middleware");
+const {
+  authorizationMiddleware,
+} = require("../../config/middlewares/authorization.middleware");
+const {
   jobApplicantSchema,
   jobApplyBasicSchema,
   jobApplyLicenseSchema,
@@ -12,11 +18,13 @@ const {
   updateApplication,
   googleOauthCallBack,
   getAllJobApplicants,
+  getAllNewApplicants,
   applicantVerifyByOTP,
   jobApplicantChangeMail,
   getJobApplicantMailCheck,
   checkApplicantValidToken,
   createApplicantBasicInfo,
+  getAllInterviewApplicants,
   updateApplicantBasicInfo,
   getSecureJobApplicantById,
   applicantVerifyUsingEmail,
@@ -29,12 +37,37 @@ const {
 module.exports = (app) => {
   app.get("/api/v1/public/career/jobs/mail-check", getJobApplicantMailCheck);
 
-  app.get("/api/v1/secure/career/jobs", getAllJobApplicants);
+  app.get(
+    "/api/v1/secure/career/jobs",
+    authenticationMiddleware,
+    authorizationMiddleware(["super_admin", "checker"]),
+    getAllJobApplicants
+  );
 
-  app.get("/api/v1/secure/career/jobs/:id", getSecureJobApplicantById);
+  app.get(
+    "/api/v1/secure/career/jobs/interview",
+    authenticationMiddleware,
+    authorizationMiddleware(["super_admin", "checker"]),
+    getAllInterviewApplicants
+  );
+  app.get(
+    "/api/v1/secure/career/jobs/new-application",
+    authenticationMiddleware,
+    authorizationMiddleware(["super_admin", "checker"]),
+    getAllNewApplicants
+  );
+
+  app.get(
+    "/api/v1/secure/career/jobs/:id",
+    authenticationMiddleware,
+    authorizationMiddleware(["super_admin", "checker"]),
+    getSecureJobApplicantById
+  );
 
   app.put(
     "/api/v1/secure/career/jobs/:id",
+    authenticationMiddleware,
+    authorizationMiddleware(["super_admin"]),
     upload.fields([
       { name: "applicant_image", maxCount: 1 },
       { name: "applicant_resume", maxCount: 1 },

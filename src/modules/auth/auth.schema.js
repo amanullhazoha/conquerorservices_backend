@@ -5,6 +5,13 @@ const loginSchema = Yup.object().shape({
   password: Yup.string().required("Email is required"),
 });
 
+const signupSchema = Yup.object().shape({
+  password: Yup.string().required("Email is required"),
+  last_name: Yup.string().required("Last name is required"),
+  first_name: Yup.string().required("First name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+});
+
 const forgotPasswordSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
 });
@@ -16,6 +23,7 @@ const resetPasswordSchema = Yup.object().shape({
 
 module.exports = {
   loginSchema,
+  signupSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
 };

@@ -68,11 +68,9 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
             }
 
             .otp {
-              gap: 12px;
-              display: flex;
+              width: 100%;
               padding: 24px 0;
-              align-items: center;
-              justify-content: center;
+              text-align: center;
             }
 
             .otp p {
@@ -80,6 +78,8 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
               font-size: 30px;
               font-weight: 700;
               color: #ff5a1f;
+              display: inline-block;
+              margin: 0 8px;
             }
 
             .otp-title {
@@ -135,12 +135,11 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
             }
           </style>
         </head>
+
         <body>
           <div class="email-container">
             <div class="email-header">
-              <a href="https://apply.conquerror.com">
-                <img src="https://www.capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" width="150" height="40" />
-              </a>
+              <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" />
             </div>
 
             <div class="email-body">
@@ -365,11 +364,11 @@ const verifySuccessMail = ({ email, user_name, message }) => {
               margin: 16px 0;
               border: 1px solid #F3F4F6;
               padding: 24px 0;
-              display: flex;
-              gap: 12px;
+              /* display: flex; */
+              /* gap: 12px; */
               border-radius: 16px;
-              justify-content: space-between;
-              align-items: center;
+              /* justify-content: space-between; */
+              /* align-items: center; */
             }
 
             .otp p {
@@ -449,17 +448,17 @@ const verifySuccessMail = ({ email, user_name, message }) => {
               </p>
 
               <div class="otp">
-                <div style="display: flex; justify-content: space-between;  align-items: center; width: 100%; padding: 0 12px;">
-                  <div style="display: flex; gap: 8px; align-items: center;">
+                <div style="display: inline-block; width: 100%; margin: auto 0;">
+                  <div style="display: inline-block; text-align: left; width: 74%;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="40px" viewBox="0 0 384 512"><path fill="#344054" d="M181.9 256.1c-5-16-4.9-46.9-2-46.9c8.4 0 7.6 36.9 2 46.9m-1.7 47.2c-7.7 20.2-17.3 43.3-28.4 62.7c18.3-7 39-17.2 62.9-21.9c-12.7-9.6-24.9-23.4-34.5-40.8M86.1 428.1c0 .8 13.2-5.4 34.9-40.2c-6.7 6.3-29.1 24.5-34.9 40.2M248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24m-8 171.8c-20-12.2-33.3-29-42.7-53.8c4.5-18.5 11.6-46.6 6.2-64.2c-4.7-29.4-42.4-26.5-47.8-6.8c-5 18.3-.4 44.1 8.1 77c-11.6 27.6-28.7 64.6-40.8 85.8c-.1 0-.1.1-.2.1c-27.1 13.9-73.6 44.5-54.5 68c5.6 6.9 16 10 21.5 10c17.9 0 35.7-18 61.1-61.8c25.8-8.5 54.1-19.1 79-23.2c21.7 11.8 47.1 19.5 64 19.5c29.2 0 31.2-32 19.7-43.4c-13.9-13.6-54.3-9.7-73.6-7.2M377 105L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9m-74.1 255.3c4.1-2.7-2.5-11.9-42.8-9c37.1 15.8 42.8 9 42.8 9"/></svg>
 
-                    <div>
+                    <div style="display: inline-block;">
                       <p style="font-size: 14px; font-weight: 500; color: #344054;">User_Application.pdf</p>
                       <p style="font-size: 14px; font-weight: 400; color: #344054; text-align: left;">200 KB</p>
                     </div>
                   </div>
 
-                  <div>
+                  <div style="text-align: right; display: inline-block; width: 25%;">
                     <a href="https://capi.conquerror.com/images/test.pdf" target="_blank" download class="copy-code" style="text-decoration: none; display: flex; gap: 6px; align-items: center; padding: 6px 15px; background: #00a8ff; color: white; border-radius: 50px; border: 4px solid #C3DDFD">
                       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m12 16l-5-5l1.4-1.45l2.6 2.6V4h2v8.15l2.6-2.6L17 11zm-6 4q-.825 0-1.412-.587T4 18v-3h2v3h12v-3h2v3q0 .825-.587 1.413T18 20z"/></svg>
                       <span>Download</span>
