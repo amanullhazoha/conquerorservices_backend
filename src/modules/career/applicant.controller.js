@@ -47,6 +47,7 @@ const getAllJobApplicants = async (req, res, next) => {
 
     if (req?.user?.role === "checker") {
       whereCondition = {
+        ...whereCondition,
         country: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
       };
     }
@@ -77,6 +78,7 @@ const getAllJobApplicants = async (req, res, next) => {
         offset: offset,
         raw: true,
         nest: true,
+        order: [["created_at", "DESC"]],
       });
 
     const totalPages = Math.ceil(totalRecords / size);
@@ -139,6 +141,7 @@ const getAllNewApplicants = async (req, res, next) => {
         offset: offset,
         raw: true,
         nest: true,
+        order: [["created_at", "DESC"]],
       });
 
     const totalPages = Math.ceil(totalRecords / size);
@@ -171,7 +174,7 @@ const getAllInterviewApplicants = async (req, res, next) => {
           [Op.in]: ["accepted", "hired", "pending", "under_review", "rejected"],
         };
 
-    let whereCondition = { applicant_status: status };
+    let whereCondition = { applicant_status: status, is_agree: true };
 
     if (req?.user?.role === "checker") {
       whereCondition = {
@@ -206,6 +209,7 @@ const getAllInterviewApplicants = async (req, res, next) => {
         offset: offset,
         raw: true,
         nest: true,
+        order: [["created_at", "DESC"]],
       });
 
     const totalPages = Math.ceil(totalRecords / size);
