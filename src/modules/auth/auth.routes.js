@@ -1,8 +1,12 @@
 const validate = require("../../config/middlewares/validate.middlware");
 const {
+  authenticationMiddleware,
+} = require("../../config/middlewares/authentication.middleware");
+const {
   userLogin,
   userSignUp,
   //   userEmailVerify,
+  getRefreshToken,
   userPasswordReset,
   userForgotPassword,
 } = require("./auth.controller");
@@ -27,6 +31,12 @@ module.exports = (app) => {
     "/api/v1/public/reset-password",
     validate(resetPasswordSchema),
     userPasswordReset
+  );
+
+  app.get(
+    "/api/v1/secure/refresh-token",
+    authenticationMiddleware,
+    getRefreshToken
   );
 
   //   app.post("/api/v1/public/email-verify", userEmailVerify);

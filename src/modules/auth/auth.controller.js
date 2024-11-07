@@ -175,6 +175,24 @@ const userPasswordReset = async (req, res, next) => {
   }
 };
 
+const getRefreshToken = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { email: req?.user?.email } });
+
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
+    const refresh_token = generateAccessToken(user);
+
+    return res.status(200).send({ refresh_token });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 // const userEmailVerify = async (req, res, next) => {
 //   try {
 //     const { email, password } = req.body;
@@ -194,6 +212,7 @@ const userPasswordReset = async (req, res, next) => {
 module.exports = {
   userLogin,
   userSignUp,
+  getRefreshToken,
   //   userEmailVerify,
   userPasswordReset,
   userForgotPassword,
