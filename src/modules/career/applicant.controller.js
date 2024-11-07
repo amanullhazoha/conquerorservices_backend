@@ -25,8 +25,11 @@ const getJobApplicantMailCheck = async (req, res, next) => {
 
     const jobApplicant = await Applicant.findOne({ where: options });
 
-    if (jobApplicant)
+    if (jobApplicant?.is_agree)
       return res.status(404).json({ message: "This email already used" });
+
+    // if (jobApplicant)
+    //   return res.status(404).json({ message: "This email already used" });
 
     res.status(200).send(jobApplicant);
   } catch (error) {
@@ -43,7 +46,7 @@ const getAllJobApplicants = async (req, res, next) => {
     const size = parseInt(req.query.size) || 10;
     const offset = (page - 1) * size;
 
-    let whereCondition;
+    let whereCondition = { is_agree: true };
 
     if (req?.user?.role === "checker") {
       whereCondition = {
@@ -106,7 +109,7 @@ const getAllNewApplicants = async (req, res, next) => {
     const size = parseInt(req.query.size) || 10;
     const offset = (page - 1) * size;
 
-    let whereCondition = { applicant_status: "new_entry" };
+    let whereCondition = { applicant_status: "new_entry", is_agree: true };
 
     if (req?.user?.role === "checker") {
       whereCondition = {
