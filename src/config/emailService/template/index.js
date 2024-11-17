@@ -644,7 +644,7 @@ const interviewMeetingScheduled = ({ to, user_name, meeting_type, data }) => {
             ? `
           <p>Meeting Time : ${data?.time}</p>
           <p>Meeting Data : ${data?.scheduled_at}</p>
-          <p>Time Zone : ${data?.countryzone}</p>
+          <p>Time Zone : ${data?.zonecountry}</p>
           <p>Zoom Link : ${data?.meetingurl}</p>
         `
             : `

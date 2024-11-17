@@ -79,42 +79,46 @@ const createZoomMeeting = async (req, res, next) => {
         }
       );
 
-      const [applicantInterview, created] = await Interview.findOrCreate({
-        where: { applicant_id: id },
-        defaults: {
-          time,
-          message,
-          zonecountry,
-          scheduled_at,
-          applicant_id: id,
-          interview_method,
-          invitedby: user?.id,
-          meetingUrl: response?.data?.join_url,
-        },
-      });
+      if (response?.data) {
+        const [applicantInterview, created] = await Interview.findOrCreate({
+          where: { applicant_id: id },
+          defaults: {
+            time,
+            message,
+            zonecountry,
+            scheduled_at,
+            applicant_id: id,
+            interview_method,
+            invitedby: user?.id,
+            meetingurl: response?.data?.join_url,
+          },
+        });
 
-      if (!created)
-        return res.status(400).json({ message: "Already exist a scheduled." });
+        if (!created)
+          return res
+            .status(400)
+            .json({ message: "Already exist a scheduled." });
 
-      await jobApplicant.update({ applicant_status: "invited" });
+        await jobApplicant.update({ applicant_status: "invited" });
 
-      console.log(response?.data);
+        console.log(response?.data);
 
-      nodemailer(
-        interviewMeetingScheduled({
-          to: jobApplicant?.email,
-          user_name: `${jobApplicant?.first_name} ${jobApplicant?.last_name}`,
-          meeting_type: applicantInterview?.interview_method,
+        nodemailer(
+          interviewMeetingScheduled({
+            to: jobApplicant?.email,
+            user_name: `${jobApplicant?.first_name} ${jobApplicant?.last_name}`,
+            meeting_type: applicantInterview?.interview_method,
+            data: applicantInterview,
+          })
+        );
+
+        res.status(201).json({
+          message: "Online meeting scheduled created.",
           data: applicantInterview,
-        })
-      );
+        });
+      }
 
-      res.status(201).json({
-        message: "Online meeting scheduled created.",
-        data: applicantInterview,
-      });
-
-      // res.status(200).json(response?.data);
+      res.status(400).json({ message: "Meeting request failed" });
     } else {
       res.status(400).send("Can not get access token");
     }
