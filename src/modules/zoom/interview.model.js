@@ -3,7 +3,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require(path.join(process.cwd(), "src/config/db/sequelize"));
 
 const Interview = sequelize.define(
-  "applicants",
+  "interviews",
   {
     id: {
       type: DataTypes.BIGINT.UNSIGNED,
@@ -20,6 +20,21 @@ const Interview = sequelize.define(
       type: DataTypes.STRING,
     },
     address: {
+      type: DataTypes.STRING,
+    },
+    city: {
+      type: DataTypes.STRING,
+    },
+    state: {
+      type: DataTypes.STRING,
+    },
+    post_office: {
+      type: DataTypes.STRING,
+    },
+    police_station: {
+      type: DataTypes.STRING,
+    },
+    required_document: {
       type: DataTypes.STRING,
     },
     contactnumber: {
