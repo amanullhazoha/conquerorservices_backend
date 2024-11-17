@@ -10,6 +10,7 @@ const {
 const {
   jobApplicantSchema,
   jobApplyBasicSchema,
+  jobStatusUpdateSchema,
   jobApplyLicenseSchema,
   jobApplyNidOrCnicSchema,
 } = require("./applicant.schema");
@@ -32,6 +33,7 @@ const {
   updateApplicantNidOrCnicInfo,
   applicantVerifyUsingPassport,
   applicantIdentifySuccessFully,
+  applicationStatusUpdateById,
 } = require("./applicant.controller");
 
 module.exports = (app) => {
@@ -81,6 +83,14 @@ module.exports = (app) => {
     ]),
     validate(jobApplicantSchema),
     updateApplication
+  );
+
+  app.put(
+    "/api/v1/secure/career/jobs-status-update/:id",
+    authenticationMiddleware,
+    authorizationMiddleware(["super_admin"]),
+    validate(jobStatusUpdateSchema),
+    applicationStatusUpdateById
   );
 
   app.get("/api/v1/public/career/jobs/:id", getJobApplicantId);

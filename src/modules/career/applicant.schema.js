@@ -1,5 +1,23 @@
 const Yup = require("yup");
 
+const allowedStatuses = [
+  "new_entry",
+  "checked",
+  "editted",
+  "invited",
+  "accepted",
+  "rejected",
+  "under_review",
+  "shortlisted",
+  "pending",
+  "offer_extended",
+  "offer_accepted",
+  "offer_declined",
+  "reschedule_requested",
+  "called",
+  "hired",
+];
+
 const jobApplyBasicSchema = Yup.object().shape({
   first_name: Yup.string().required("First name is required"),
   last_name: Yup.string().required("Last name is required"),
@@ -303,9 +321,19 @@ const jobApplicantSchema = Yup.object().shape({
   ref2_address: Yup.string(),
 });
 
+const jobStatusUpdateSchema = Yup.object().shape({
+  status: Yup.string()
+    .oneOf(
+      allowedStatuses,
+      `Status must be one of: ${allowedStatuses.join(", ")}`
+    )
+    .required("Status is required"),
+});
+
 module.exports = {
   jobApplicantSchema,
   jobApplyBasicSchema,
   jobApplyLicenseSchema,
+  jobStatusUpdateSchema,
   jobApplyNidOrCnicSchema,
 };

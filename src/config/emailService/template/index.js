@@ -609,8 +609,8 @@ const oneTimePassword = ({ to, user_name, password }) => {
   const mailOptions = {
     from: process.env.EMAIL_SENDER_ACCOUNT,
     to: to,
-    text: "Password Reset Request",
-    subject: "Password Reset Request",
+    text: "One Time Password",
+    subject: "One Time Password",
     html: `
       <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
         <h2 style="color: #333;">Password Reset Request</h2>
@@ -626,9 +626,54 @@ const oneTimePassword = ({ to, user_name, password }) => {
   return mailOptions;
 };
 
+const interviewMeetingScheduled = ({ to, user_name, meeting_type, data }) => {
+  const mailOptions = {
+    from: process.env.EMAIL_SENDER_ACCOUNT,
+    to: to,
+    text: "Interview Meeting scheduled",
+    subject: "Interview Meeting scheduled",
+    html: `
+      <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
+        <h2 style="color: #333;">Password Reset Request</h2>
+        <p>Hi ${user_name}</p>
+
+        <p>Meeting Type : ${meeting_type}</p>
+
+        ${
+          meeting_type === "online"
+            ? `
+          <p>Meeting Time : ${data?.time}</p>
+          <p>Meeting Data : ${data?.scheduled_at}</p>
+          <p>Time Zone : ${data?.countryzone}</p>
+          <p>Zoom Link : ${data?.meetingurl}</p>
+        `
+            : `
+          <p>Meeting Time : ${data?.time}</p>
+          <p>Meeting Data : ${data?.scheduled_at}</p>
+          <p>Time Zone : ${data?.zonecountry}</p>
+          <p>Address : ${data?.address}</p>
+          <p>State / Province : ${data?.state}</p>
+          <p>City / District : ${data?.city}</p>
+          <p>Police Station : ${data?.police_station}</p>
+          <p>Post Office : ${data?.post_office}</p>
+          <p>Required Document : ${data?.required_document}</p>
+          `
+        }
+     
+        <p>Meeting Type : ${data?.message}</p>
+
+        <p>Thank you!</p>
+      </div>
+    `,
+  };
+
+  return mailOptions;
+};
+
 module.exports = {
   oneTimePassword,
   verifySuccessMail,
   sendPasswordResetEmail,
+  interviewMeetingScheduled,
   emailVerifyMailForApplicant,
 };

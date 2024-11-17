@@ -3,6 +3,10 @@ const User = require("../user/user.model");
 const { parse, format } = require("date-fns");
 const Interview = require("./interview.model");
 const Applicant = require("../career/applicant.model");
+const nodemailer = require("../../config/emailService/config");
+const {
+  interviewMeetingScheduled,
+} = require("../../config/emailService/template");
 
 const formatDateTime = (data, time) => {
   const datePart = parse(data, "yyyy-MM-dd", new Date());
@@ -96,6 +100,15 @@ const createZoomMeeting = async (req, res, next) => {
 
       console.log(response?.data);
 
+      nodemailer(
+        interviewMeetingScheduled({
+          to: jobApplicant?.email,
+          user_name: `${jobApplicant?.first_name} ${jobApplicant?.last_name}`,
+          meeting_type: applicantInterview?.interview_method,
+          data: applicantInterview,
+        })
+      );
+
       res.status(201).json({
         message: "Online meeting scheduled created.",
         data: applicantInterview,
@@ -158,6 +171,15 @@ const createInPersonMeeting = async (req, res, next) => {
       return res.status(400).json({ message: "Already exist a scheduled." });
 
     await jobApplicant.update({ applicant_status: "invited" });
+
+    nodemailer(
+      interviewMeetingScheduled({
+        to: jobApplicant?.email,
+        user_name: `${jobApplicant?.first_name} ${jobApplicant?.last_name}`,
+        meeting_type: applicantInterview?.interview_method,
+        data: applicantInterview,
+      })
+    );
 
     res.status(201).json({
       message: "In person meeting scheduled created.",

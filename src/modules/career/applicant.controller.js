@@ -1359,6 +1359,31 @@ const googleOauthCallBack = async (req, res, next) => {
   }
 };
 
+const applicationStatusUpdateById = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+
+    const { status } = req.body;
+
+    const applicant = await Applicant.findOne({ where: { id } });
+
+    if (!applicant)
+      return res.status(404).json({ message: "Data not found by Id." });
+
+    await applicant.update({
+      applicant_status: status,
+    });
+
+    res
+      .status(201)
+      .json({ message: "Application status update", data: applicant });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 module.exports = {
   getJobApplicantId,
   updateApplication,
@@ -1378,4 +1403,5 @@ module.exports = {
   updateApplicantNidOrCnicInfo,
   applicantVerifyUsingPassport,
   applicantIdentifySuccessFully,
+  applicationStatusUpdateById,
 };
