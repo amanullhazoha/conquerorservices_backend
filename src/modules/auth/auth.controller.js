@@ -1,9 +1,11 @@
 const path = require("path");
-const User = require("../user/user.model");
-const nodemailer = require("../../config/emailService/config");
 const jwt = require("jsonwebtoken");
+const User = require("../user/user.model");
+const { generatePassword } = require("../core/utilities");
+const nodemailer = require("../../config/emailService/config");
 const { verifyToken } = require("../../config/lib/jwtHelper");
 const {
+  oneTimePassword,
   sendPasswordResetEmail,
 } = require("../../config/emailService/template");
 const {
@@ -17,6 +19,31 @@ const EmailVerifyToken = require(path.join(
   process.cwd(),
   "src/modules/user/emailVerifyToken.model"
 ));
+
+const getUserMailCheck = async (req, res, next) => {
+  try {
+    const email = req?.query?.email;
+
+    const options = { email };
+
+    if (!email)
+      return res.status(400).json({ message: "Please input a email first" });
+
+    const user = await User.findOne({ where: options });
+
+    if (user)
+      return res.status(404).json({ message: "This email already used" });
+
+    // if (jobApplicant)
+    //   return res.status(404).json({ message: "This email already used" });
+
+    res.status(200).json({ message: "Email is not user", data: user });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
 
 const userLogin = async (req, res, next) => {
   try {
@@ -193,6 +220,245 @@ const getRefreshToken = async (req, res, next) => {
   }
 };
 
+const agentRegistration = async (req, res, next) => {
+  try {
+    let nid_back_page;
+    let profile_image;
+    let resident_visa;
+    let nid_front_page;
+    let passport_front_page;
+    let business_license_copy;
+    let passport_special_page;
+
+    if (req?.files?.nid_back_page) {
+      nid_back_page = req?.files?.nid_back_page[0]?.filename;
+    }
+
+    if (req?.files?.passport_special_page) {
+      passport_special_page = req?.files?.passport_special_page[0]?.filename;
+    }
+
+    if (req?.files?.profile_image) {
+      profile_image = req?.files?.profile_image[0]?.filename;
+    }
+    if (req?.files?.resident_visa) {
+      resident_visa = req?.files?.resident_visa[0]?.filename;
+    }
+    if (req?.files?.nid_front_page) {
+      nid_front_page = req?.files?.nid_front_page[0]?.filename;
+    }
+    if (req?.files?.passport_front_page) {
+      passport_front_page = req?.files?.passport_front_page[0]?.filename;
+    }
+    if (req?.files?.business_license_copy) {
+      business_license_copy = req?.files?.business_license_copy[0]?.filename;
+    }
+
+    const {
+      email,
+      phone,
+      full_name,
+      nationality,
+      passport_no,
+      is_agree,
+      spouse,
+      alt_phone,
+      father_name,
+      mother_name,
+      facebook_id,
+      whatsapp_no,
+      telegram_id,
+      reference_name,
+      marital_status,
+      spouse_contact_no,
+    } = req.body;
+
+    const password = generatePassword();
+    const passwordHashed = await hashPassword(password);
+
+    const [user, created] = await User.findOrCreate({
+      where: { email },
+      defaults: {
+        phone,
+        email,
+        full_name,
+        nationality,
+        passport_no,
+        is_agree,
+
+        spouse,
+        alt_phone,
+        father_name,
+        mother_name,
+        facebook_id,
+        whatsapp_no,
+        telegram_id,
+        reference_name,
+        marital_status,
+        spouse_contact_no,
+
+        passport_front_page,
+        passport_special_page,
+        nid_front_page,
+        nid_back_page,
+        profile_image,
+        resident_visa,
+        business_license_copy,
+
+        password: passwordHashed,
+        registration_type: "agent",
+      },
+    });
+
+    if (!created)
+      return res.status(400).json({ message: "You already have and account." });
+
+    nodemailer(oneTimePassword({ to: email, user_name: full_name, password }));
+
+    res.status(201).json({
+      message: "Agent registration successfully",
+      data: {
+        email: user?.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
+const employeeRegistration = async (req, res, next) => {
+  try {
+    let nid_back_page;
+    let profile_image;
+    let resident_visa;
+    let nid_front_page;
+    let passport_front_page;
+    let business_license_copy;
+    let passport_special_page;
+
+    if (req?.files?.nid_back_page) {
+      nid_back_page = req?.files?.nid_back_page[0]?.filename;
+    }
+
+    if (req?.files?.passport_special_page) {
+      passport_special_page = req?.files?.passport_special_page[0]?.filename;
+    }
+
+    if (req?.files?.profile_image) {
+      profile_image = req?.files?.profile_image[0]?.filename;
+    }
+    if (req?.files?.resident_visa) {
+      resident_visa = req?.files?.resident_visa[0]?.filename;
+    }
+    if (req?.files?.nid_front_page) {
+      nid_front_page = req?.files?.nid_front_page[0]?.filename;
+    }
+    if (req?.files?.passport_front_page) {
+      passport_front_page = req?.files?.passport_front_page[0]?.filename;
+    }
+    if (req?.files?.business_license_copy) {
+      business_license_copy = req?.files?.business_license_copy[0]?.filename;
+    }
+
+    const {
+      phone,
+      email,
+      last_name,
+      first_name,
+      nationality,
+      is_agree,
+      date_of_birth,
+
+      nid_number,
+      spouse,
+      father_name,
+      mother_name,
+      passport_no,
+      emirates_id,
+      whatsapp_no,
+      uae_resident,
+      marital_status,
+      spouse_contact_no,
+      passport_expiry_date,
+      emirates_expiry_date,
+
+      position_id,
+      department,
+    } = req.body;
+
+    const password = generatePassword();
+    const passwordHashed = await hashPassword(password);
+
+    console.log(emirates_expiry_date, Boolean(uae_resident));
+
+    const [user, created] = await User.findOrCreate({
+      where: { email },
+      defaults: {
+        phone,
+        email,
+        last_name,
+        first_name,
+        full_name: `${first_name} ${last_name}`,
+        nationality,
+        is_agree,
+        date_of_birth,
+
+        nid_number,
+        spouse,
+        father_name,
+        mother_name,
+        passport_no,
+        emirates_id,
+        whatsapp_no,
+        uae_resident,
+        marital_status,
+        spouse_contact_no,
+        passport_expiry_date,
+        emirates_expiry_date:
+          uae_resident === "true" ? emirates_expiry_date : null,
+
+        position_id,
+        department,
+
+        passport_front_page,
+        passport_special_page,
+        nid_front_page,
+        nid_back_page,
+        profile_image,
+        resident_visa,
+        business_license_copy,
+
+        password: passwordHashed,
+        registration_type: "employee",
+      },
+    });
+
+    if (!created)
+      return res.status(400).json({ message: "You already have and account." });
+
+    nodemailer(
+      oneTimePassword({
+        to: email,
+        user_name: `${first_name} ${last_name}`,
+        password,
+      })
+    );
+
+    res.status(201).json({
+      message: "Employee registration successfully",
+      data: {
+        email: user?.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 // const userEmailVerify = async (req, res, next) => {
 //   try {
 //     const { email, password } = req.body;
@@ -212,7 +478,10 @@ const getRefreshToken = async (req, res, next) => {
 module.exports = {
   userLogin,
   userSignUp,
+  getUserMailCheck,
   getRefreshToken,
+  agentRegistration,
+  employeeRegistration,
   //   userEmailVerify,
   userPasswordReset,
   userForgotPassword,

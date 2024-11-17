@@ -605,7 +605,29 @@ const sendPasswordResetEmail = ({ to, token }) => {
   return mailOptions;
 };
 
+const oneTimePassword = ({ to, user_name, password }) => {
+  const mailOptions = {
+    from: process.env.EMAIL_SENDER_ACCOUNT,
+    to: to,
+    text: "Password Reset Request",
+    subject: "Password Reset Request",
+    html: `
+      <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
+        <h2 style="color: #333;">Password Reset Request</h2>
+        <p>Hi ${user_name}</p>
+
+        <p>Your one time password is : ${password}</p>
+     
+        <p>Thank you!</p>
+      </div>
+    `,
+  };
+
+  return mailOptions;
+};
+
 module.exports = {
+  oneTimePassword,
   verifySuccessMail,
   sendPasswordResetEmail,
   emailVerifyMailForApplicant,

@@ -71,6 +71,9 @@ const User = sequelize.define(
     spouse_contact_no: {
       type: DataTypes.STRING,
     },
+    nid_number: {
+      type: DataTypes.STRING,
+    },
     uae_resident: {
       type: DataTypes.BOOLEAN,
     },
@@ -79,6 +82,8 @@ const User = sequelize.define(
     },
     emirates_expiry_date: {
       type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null,
     },
     country: {
       type: DataTypes.STRING,
@@ -144,6 +149,10 @@ const User = sequelize.define(
         "user"
       ),
       defaultValue: "user",
+    },
+    registration_type: {
+      type: DataTypes.ENUM("agent", "employee"),
+      defaultValue: "employee",
     },
   },
   {
