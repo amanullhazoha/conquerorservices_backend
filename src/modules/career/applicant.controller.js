@@ -31,7 +31,7 @@ const getJobApplicantMailCheck = async (req, res, next) => {
     // if (jobApplicant)
     //   return res.status(404).json({ message: "This email already used" });
 
-    res.status(200).send(jobApplicant);
+    res.status(200).json({ email: jobApplicant?.email });
   } catch (error) {
     console.log(error);
 
@@ -385,7 +385,7 @@ const updateApplication = async (req, res, next) => {
       where: { email, id: { [Op.ne]: id } },
     });
 
-    if (existEmail) {
+    if (existEmail && existEmail?.is_agree) {
       return res
         .status(400)
         .send("Email is already in use by another applicant.");
@@ -508,43 +508,53 @@ const createApplicantBasicInfo = async (req, res, next) => {
       hiring_position,
     } = req.body;
 
-    const [applicant, created] = await Applicant.findOrCreate({
+    const existEmail = await Applicant.findOne({
       where: { email },
-      defaults: {
-        first_name,
-        last_name,
-        mother_name,
-        gender,
-        date_of_birth,
-        nationality,
-        contact_number,
-        whatsapp_number,
-        position_id,
-        applicant_image,
-        hiring_position:
-          position_id === "52" || position_id === 52 ? hiring_position : null,
+    });
 
-        zip: "",
-        city: "",
-        country: "",
-        province: "",
-        religion: "",
-        passportno: "",
-        father_name: "",
-        policeStation: "",
-        martialstatus: "",
-        nidorcnicnumber: "",
-        date_of_expiry: null,
-        applicant_passport: "",
-      },
+    console.log(existEmail?.is_agree);
+
+    if (existEmail && existEmail?.is_agree) {
+      return res
+        .status(400)
+        .json({ message: "Email is already in use by another applicant." });
+    }
+
+    const created = await Applicant.create({
+      email,
+      first_name,
+      last_name,
+      mother_name,
+      gender,
+      date_of_birth,
+      nationality,
+      contact_number,
+      whatsapp_number,
+      position_id,
+      applicant_image,
+      hiring_position:
+        position_id === "52" || position_id === 52 ? hiring_position : null,
+
+      zip: "",
+      city: "",
+      country: "",
+      province: "",
+      religion: "",
+      passportno: "",
+      father_name: "",
+      policeStation: "",
+      martialstatus: "",
+      nidorcnicnumber: "",
+      date_of_expiry: null,
+      applicant_passport: "",
     });
 
     if (!created)
       return res
         .status(400)
-        .json({ message: "You already use this mail for application." });
+        .json({ message: "There was a problem for create." });
 
-    res.status(201).send(applicant);
+    res.status(201).send(created);
   } catch (error) {
     console.log(error);
 
@@ -587,7 +597,7 @@ const updateApplicantBasicInfo = async (req, res, next) => {
       where: { email, id: { [Op.ne]: id } },
     });
 
-    if (existEmail) {
+    if (existEmail && existEmail?.is_agree) {
       return res
         .status(400)
         .json({ message: "Email is already in use by another applicant." });
