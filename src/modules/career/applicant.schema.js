@@ -287,9 +287,9 @@ const jobApplicantSchema = Yup.object().shape({
     .required("Agreement is required")
     .isTrue("You must agree to the terms"),
   submissionid: Yup.string(),
-  appli_dri_number: Yup.string(),
-  appli_dri_expiry: Yup.string(),
-  have_uae_licence: Yup.string(),
+  appli_dri_number: Yup.string().nullable(),
+  appli_dri_expiry: Yup.string().nullable(),
+  have_uae_licence: Yup.string().nullable(),
   UAE_License_No: Yup.string().when(
     "have_uae_licence",
     ([have_uae_licence], schema) => {
@@ -308,17 +308,17 @@ const jobApplicantSchema = Yup.object().shape({
       return schema.nullable();
     }
   ),
-  SIM_No: Yup.string(),
-  ref1_name: Yup.string(),
+  SIM_No: Yup.string().nullable(),
+  ref1_name: Yup.string().nullable(),
   ref1_email: Yup.string().nullable().email("Invalid email"),
   ref1_phone: Yup.string().nullable().max(19, "Number maximum 15 digits"),
-  ref1_country: Yup.string(),
-  ref1_address: Yup.string(),
-  ref2_name: Yup.string(),
+  ref1_country: Yup.string().nullable(),
+  ref1_address: Yup.string().nullable(),
+  ref2_name: Yup.string().nullable(),
   ref2_email: Yup.string().nullable().email("Invalid email"),
   ref2_phone: Yup.string().nullable().max(19, "Number maximum 15 digits"),
-  ref2_country: Yup.string(),
-  ref2_address: Yup.string(),
+  ref2_country: Yup.string().nullable(),
+  ref2_address: Yup.string().nullable(),
 });
 
 const jobStatusUpdateSchema = Yup.object().shape({

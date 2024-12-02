@@ -9,8 +9,6 @@ const getUserReferCodeCheck = async (req, res, next) => {
 
     const user = await User.findOne({ where: { refer_code: code } });
 
-    console.log(user?.refer_code);
-
     if (!user)
       return res.status(404).json({ message: "This refer code is not exist" });
 
