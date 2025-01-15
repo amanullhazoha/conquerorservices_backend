@@ -217,26 +217,26 @@ const jobApplicantSchema = Yup.object().shape({
     }),
   nationality: Yup.string().required("Nationality is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  contact_number: Yup.string()
-    .required("Contact number is required")
-    .when("nationality", ([nationality], schema) => {
-      switch (nationality) {
-        case "Nepal":
-          return schema.length(14, "Contact number must be 10 digits");
-        case "Pakistan":
-          return schema.length(13, "Contact number must be 10 digits");
-        case "India":
-          return schema.length(13, "Contact number must be 10 digits");
-        case "Philippine":
-          return schema.length(13, "Contact number must be 10 digits");
-        case "Bangladesh":
-          return schema.length(14, "Contact number must be 10 digits");
-        case "Sri Lanka":
-          return schema.length(12, "Contact number must be 9 digits");
-        default:
-          return schema;
-      }
-    }),
+  contact_number: Yup.string(),
+  // .required("Contact number is required")
+  // .when("nationality", ([nationality], schema) => {
+  //   switch (nationality) {
+  //     case "Nepal":
+  //       return schema.length(14, "Contact number must be 10 digits");
+  //     case "Pakistan":
+  //       return schema.length(13, "Contact number must be 10 digits");
+  //     case "India":
+  //       return schema.length(13, "Contact number must be 10 digits");
+  //     case "Philippine":
+  //       return schema.length(13, "Contact number must be 10 digits");
+  //     case "Bangladesh":
+  //       return schema.length(14, "Contact number must be 10 digits");
+  //     case "Sri Lanka":
+  //       return schema.length(12, "Contact number must be 9 digits");
+  //     default:
+  //       return schema;
+  //   }
+  // }),
   whatsapp_number: Yup.string()
     .min(9, "Number minimum 8 digits")
     .max(19, "Number maximum 15 digits")
@@ -248,14 +248,19 @@ const jobApplicantSchema = Yup.object().shape({
     }
     return schema.nullable();
   }),
-  zip: Yup.string().required("Zip is required"),
-  city: Yup.string().required("City is required"),
-  religion: Yup.string().required("Religion is required"),
-  province: Yup.string().required("Province is required"),
+  zip: Yup.string(),
+  city: Yup.string(),
+  religion: Yup.string(),
+  province: Yup.string(),
+  homeaddrss: Yup.string(),
+  // zip: Yup.string().required("Zip is required"),
+  // city: Yup.string().required("City is required"),
+  // religion: Yup.string().required("Religion is required"),
+  // province: Yup.string().required("Province is required"),
+  // homeaddrss: Yup.string().required("Home address is required"),
   passportno: Yup.string()
     .max(10, "Passport number max 10 digits.")
     .required("Passport number is required"),
-  homeaddrss: Yup.string().required("Home address is required"),
   uaeresident: Yup.string()
     .required("UAE resident is required")
     .matches(/^(yes|no)$/i, 'UAE resident must be "yes" or "no"'),

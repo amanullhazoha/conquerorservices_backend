@@ -154,6 +154,9 @@ const User = sequelize.define(
       type: DataTypes.ENUM("agent", "employee"),
       defaultValue: "employee",
     },
+    refer_code: {
+      type: DataTypes.STRING,
+    },
   },
   {
     tableName: "users",

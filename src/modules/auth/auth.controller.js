@@ -1,7 +1,7 @@
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const User = require("../user/user.model");
-const { generatePassword } = require("../core/utilities");
+const { generatePassword, generateRefCode } = require("../core/utilities");
 const nodemailer = require("../../config/emailService/config");
 const { verifyToken } = require("../../config/lib/jwtHelper");
 const {
@@ -276,6 +276,10 @@ const agentRegistration = async (req, res, next) => {
     const password = generatePassword();
     const passwordHashed = await hashPassword(password);
 
+    const nameParts = full_name.trim().split(" ");
+    const firstName = nameParts[0];
+    const lastName = nameParts[nameParts?.length - 1] || firstName;
+
     const [user, created] = await User.findOrCreate({
       where: { email },
       defaults: {
@@ -307,6 +311,7 @@ const agentRegistration = async (req, res, next) => {
 
         password: passwordHashed,
         registration_type: "agent",
+        refer_code: generateRefCode("1998", firstName, lastName, phone),
       },
     });
 
@@ -391,8 +396,6 @@ const employeeRegistration = async (req, res, next) => {
     const password = generatePassword();
     const passwordHashed = await hashPassword(password);
 
-    console.log(emirates_expiry_date, Boolean(uae_resident));
-
     const [user, created] = await User.findOrCreate({
       where: { email },
       defaults: {
@@ -432,6 +435,7 @@ const employeeRegistration = async (req, res, next) => {
 
         password: passwordHashed,
         registration_type: "employee",
+        ref_code: generateRefCode(date_of_birth, first_name, last_name, phone),
       },
     });
 

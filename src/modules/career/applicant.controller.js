@@ -452,12 +452,12 @@ const updateApplication = async (req, res, next) => {
         position_id === "52" || position_id === 52 ? ref2_country : null,
       ref2_address:
         position_id === "52" || position_id === 52 ? ref2_address : null,
-      zip,
-      city,
+      // zip,
+      // city,
+      // province,
+      // homeaddrss,
       religion,
-      province,
       passportno,
-      homeaddrss,
       father_name,
       policeStation,
       martialstatus,
@@ -474,6 +474,13 @@ const updateApplication = async (req, res, next) => {
       spouse: martialstatus === "married" ? spouse : null,
       is_agree,
       submissionid,
+
+      zip: applicant?.nationality !== nationality ? "" : zip,
+      policeStation:
+        applicant?.nationality !== nationality ? "" : policeStation,
+      city: applicant?.nationality !== nationality ? "" : city,
+      province: applicant?.nationality !== nationality ? "" : province,
+      homeaddrss: applicant?.nationality !== nationality ? "" : homeaddrss,
     });
 
     res.status(201).send(applicant);
@@ -696,6 +703,15 @@ const updateApplicantBasicInfo = async (req, res, next) => {
         position_id === "52" || position_id === 52
           ? applicant?.ref2_address
           : null,
+
+      zip: applicant?.nationality !== nationality ? "" : applicant?.zip,
+      policeStation:
+        applicant?.nationality !== nationality ? "" : applicant?.policeStation,
+      city: applicant?.nationality !== nationality ? "" : applicant?.city,
+      province:
+        applicant?.nationality !== nationality ? "" : applicant?.province,
+      homeaddrss:
+        applicant?.nationality !== nationality ? "" : applicant?.homeaddrss,
     });
 
     res.status(201).send(applicant);

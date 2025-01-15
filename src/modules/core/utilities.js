@@ -24,6 +24,27 @@ const generatePassword = () => {
   return shuffledPassword.join("");
 };
 
+const generateRefCode = (dob, firstName, lastName, mobileNumber) => {
+  const yearOfBirth = new Date(dob).getFullYear().toString();
+
+  const firstLetter = firstName.charAt(0).toUpperCase();
+  const lastLetter = lastName.charAt(lastName.length - 1).toUpperCase();
+
+  const lastTwoDigits = mobileNumber.slice(-2);
+
+  const randomLetter = () =>
+    String.fromCharCode(65 + Math.floor(Math.random() * 26));
+
+  const randomLetters = randomLetter() + randomLetter();
+
+  const refCode =
+    randomLetters + yearOfBirth + firstLetter + lastLetter + lastTwoDigits;
+
+  return refCode.slice(0, 10);
+};
+
+
 module.exports = {
+  generateRefCode,
   generatePassword,
 };
