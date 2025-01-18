@@ -519,12 +519,120 @@ const createApplicantBasicInfo = async (req, res, next) => {
       where: { email },
     });
 
-    console.log(existEmail?.is_agree);
-
     if (existEmail && existEmail?.is_agree) {
       return res
         .status(400)
         .json({ message: "Email is already in use by another applicant." });
+    }
+
+    if (existEmail) {
+      await existEmail.update({
+        first_name,
+        last_name,
+        mother_name,
+        gender,
+        date_of_birth,
+        nationality,
+        email,
+        contact_number,
+        whatsapp_number,
+        position_id,
+        applicant_image,
+        hiring_position:
+          position_id === "52" || position_id === 52 ? hiring_position : null,
+
+        UAE_DL_Front:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.UAE_DL_Front,
+        UAE_DL_Back:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.UAE_DL_Back,
+        appli_dri_number:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.appli_dri_number,
+        appli_dri_expiry:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.appli_dri_expiry,
+        have_uae_licence:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.have_uae_licence,
+        UAE_License_No:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.UAE_License_No,
+        UAE_Resident_Visa_No:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.UAE_Resident_Visa_No,
+        SIM_No:
+          position_id === "52" || position_id === 52 ? null : existEmail.SIM_No,
+        appli_dri_lisence_frontpart:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.appli_dri_lisence_frontpart,
+        appli_dri_lisence_backpart:
+          position_id === "52" || position_id === 52
+            ? null
+            : existEmail.appli_dri_lisence_backpart,
+        ref1_name:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref1_name
+            : null,
+        ref1_email:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref1_email
+            : null,
+        ref1_phone:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref1_phone
+            : null,
+        ref1_country:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref1_country
+            : null,
+        ref1_address:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref1_address
+            : null,
+        ref2_name:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref2_name
+            : null,
+        ref2_email:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref2_email
+            : null,
+        ref2_phone:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref2_phone
+            : null,
+        ref2_country:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref2_country
+            : null,
+        ref2_address:
+          position_id === "52" || position_id === 52
+            ? existEmail?.ref2_address
+            : null,
+
+        zip: existEmail?.nationality !== nationality ? "" : existEmail?.zip,
+        policeStation:
+          existEmail?.nationality !== nationality
+            ? ""
+            : existEmail?.policeStation,
+        city: existEmail?.nationality !== nationality ? "" : existEmail?.city,
+        province:
+          existEmail?.nationality !== nationality ? "" : existEmail?.province,
+        homeaddrss:
+          existEmail?.nationality !== nationality ? "" : existEmail?.homeaddrss,
+      });
+
+      return res.status(201).send(existEmail);
     }
 
     const created = await Applicant.create({
