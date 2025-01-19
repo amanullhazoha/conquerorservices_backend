@@ -41,12 +41,21 @@ const getJobApplicantMailCheck = async (req, res, next) => {
 
 const getAllJobApplicants = async (req, res, next) => {
   try {
+    const filter = req.query.filter;
     const searchQuery = req.query.search;
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 10;
     const offset = (page - 1) * size;
 
     let whereCondition = { is_agree: true };
+
+    if (filter === "verified") {
+      whereCondition = { ...whereCondition, email_verify: "verified" };
+    } else if (filter === "unverified") {
+      whereCondition = { ...whereCondition, email_verify: "unverified" };
+    } else {
+      whereCondition = { ...whereCondition };
+    }
 
     if (req?.user?.role === "checker") {
       whereCondition = {
@@ -104,6 +113,7 @@ const getAllJobApplicants = async (req, res, next) => {
 
 const getAllNewApplicants = async (req, res, next) => {
   try {
+    const filter = req.query.filter;
     const searchQuery = req.query.search;
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 10;
@@ -116,6 +126,14 @@ const getAllNewApplicants = async (req, res, next) => {
         ...whereCondition,
         country: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
       };
+    }
+
+    if (filter === "verified") {
+      whereCondition = { ...whereCondition, email_verify: "verified" };
+    } else if (filter === "unverified") {
+      whereCondition = { ...whereCondition, email_verify: "unverified" };
+    } else {
+      whereCondition = { ...whereCondition };
     }
 
     if (searchQuery) {
