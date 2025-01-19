@@ -604,287 +604,245 @@ const sendPasswordResetEmail = ({ to, token }) => {
     to: to,
     text: "Password Reset Request",
     subject: "Password Reset Request",
-    // html: `
-    //   <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
-    //     <h2 style="color: #333;">Password Reset Request</h2>
-    //     <p>Hi,</p>
-    //     <p>We received a request to reset your password. You can reset your password by clicking the button below:</p>
-    //     <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px;">Reset Password</a>
-    //     <p>If you didn’t request this, please ignore this email. Your password will remain unchanged.</p>
-    //     <p>Thank you!</p>
-    //   </div>
-    // `,
     html: `
     <!DOCTYPE html>
     <html lang="en">
-      <head>
+        <head>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Email Template</title>
         <style>
-          body {
+            body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #fff;
-          }
+            }
 
-          h1,
-          h2,
-          h3,
-          h4,
-          h5,
-          h6,
-          p {
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6,
+            p {
             margin: 0;
             padding: 0;
-          }
+            }
 
-          .email-container {
+            .email-container {
             max-width: 600px;
             margin: 20px auto;
             background-color: #f9fafb;
             padding: 24px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          }
-          .email-header {
+            }
+            .email-header {
             text-align: center;
-          }
-          .email-header img {
+            }
+            .email-header img {
             max-width: 150px;
-          }
-          .email-body {
+            }
+            .email-body {
             padding: 16px;
             margin-top: 20px;
             border-radius: 16px;
             background: #ffffff;
-          }
-          .email-body h2 {
+            }
+            .email-body h2 {
             font-size: 30px;
             font-weight: 700;
             color: #111928;
             margin-top: 0;
             text-align: center;
             margin-bottom: 32px;
-          }
+            }
 
-          .email-body p {
+            .email-body p {
             font-size: 16px;
             font-weight: 400;
             color: #374151;
             line-height: 24px;
-          }
+            }
 
-          .otp {
-            margin: 16px 0;
-            border: 1px solid #F3F4F6;
-            padding: 24px 0;
-            /* display: flex; */
-            /* gap: 12px; */
-            border-radius: 16px;
-            /* justify-content: space-between; */
-            /* align-items: center; */
-          }
-
-          .otp p {
-            text-align: center;
-            font-size: 30px;
-            font-weight: 700;
-            color: #ff5a1f;
-          }
-
-          .otp-title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #111928;
-            cursor: pointer;
-          }
-
-          .copy-code {
-            font-weight: 600;
-            font-size: 14px;
-            color: #00a8ff;
-            cursor: pointer;
-          }
-
-          .support-text {
+            .support-text {
             font-size: 14px;
             color: #666;
-          }
+            }
 
-          .email-footer {
+            .email-footer {
             text-align: center;
             margin-top: 32px;
-          }
+            }
 
-          .email-footer h3 {
+            .email-footer h3 {
             text-align: center;
             margin-top: 30px;
             color: #374151;
             font-size: 20px;
             font-weight: 700;
-          }
+            }
 
-          .email-footer .link {
+            .email-footer .link {
             color: #374151;
             font-size: 14px;
             font-weight: 600;
-          }
+            }
 
-          .social-icons {
+            .social-icons {
             gap: 16px;
             display: flex;
             margin: 20px 0 32px 0;
             justify-content: center;
-          }
-          .social-icons img {
+            }
+            .social-icons img {
             width: 30px;
             margin: 0 5px;
-          }
-          .email-footer .address {
+            }
+            .email-footer .address {
             margin-top: 15px;
-          }
+            }
         </style>
-      </head>
-      <body>
+        </head>
+        <body>
         <div class="email-container">
-          <div class="email-header">
+            <div class="email-header">
             <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" />
-          </div>
+            </div>
 
-          <div class="email-body">
+            <div class="email-body">
             <h2>Reset Your Password</h2>
             <p>Dear ${user_name},</p>
             <p>
                 We’ve received a request to reset your password for your account on Conqueror Services. Click the link below to create a new password:
             </p>
 
-            <div style="text-align: center; display: inline-block; width: 25%;">
-              <a href="https://capi.conquerror.com/images/test.pdf" target="_blank" download class="copy-code" style="text-decoration: none; display: flex; gap: 6px; align-items: center; padding: 6px 15px; background: #00a8ff; color: white; border-radius: 50px; border: 4px solid #C3DDFD">
+            <div style="text-align: center; display: inline-block; width: 100%; padding-top: 20px; padding-bottom: 20px;">
+                <a href="${resetLink}" target="_blank" download class="copy-code" style="text-decoration: none; text-align: center; padding: 8px 15px; background: #C81E1E; color: white; border-radius: 6px;">
                 <img src="https://capi.conquerror.com/images/Key.png" alt="Key" />
                 <span>Rest My Password</span>
-              </a>
+                </a>
             </div>
 
 
             <p class="support-text">
-                If you didn’t request this, please ignore this email or contact our <a href="/">Support Team</a>.
+                If you didn’t request this, please ignore this email or contact our <a href="/" style="text-decoration: none;">Support Team</a>.
             </p>
 
             <p>We’re here to ensure your account stays safe!</p>
 
             <p style="margin-top: 24px">
-              Best regards,<br />Conqueror Services Support Team
+                Best regards,<br />Conqueror Services Support Team
             </p>
-          </div>
+            </div>
 
-          <div class="email-footer">
+            <div class="email-footer">
             <h3>CONNECT WITH</h3>
 
             <div class="social-icons">
-              <a href="https://www.facebook.com"  style="text-decoration: none; color: #6B7280;">
+                <a href="https://www.facebook.com"  style="text-decoration: none; color: #6B7280;">
                 <img src="https://capi.conquerror.com/images/Facebook.png" alt="facebook" />
-              </a>
+                </a>
 
-              <a href="https://www.instagram.com" style="text-decoration: none; color: #6B7280;">
+                <a href="https://www.instagram.com" style="text-decoration: none; color: #6B7280;">
                 <img src="https://capi.conquerror.com/images/instagram.png" alt="instagram" />
-              </a>
+                </a>
 
-              <a  href="https://www.linkedin.com" style="text-decoration: none; color: #6B7280;">
+                <a  href="https://www.linkedin.com" style="text-decoration: none; color: #6B7280;">
                 <img src="https://capi.conquerror.com/images/linkedin.png" alt="linkedin" />
-              </a>
+                </a>
 
-              <a href="https://www.youtube.com" style="text-decoration: none; color: #6B7280;">
-               <img src="https://capi.conquerror.com/images/youtube.png" alt="youtube" />
-              </a>
+                <a href="https://www.youtube.com" style="text-decoration: none; color: #6B7280;">
+                <img src="https://capi.conquerror.com/images/youtube.png" alt="youtube" />
+                </a>
 
-              <a href="https://m.me/yourusername" style="text-decoration: none; color: #6B7280;">
+                <a href="https://m.me/yourusername" style="text-decoration: none; color: #6B7280;">
                 <img src="https://capi.conquerror.com/images/facebookA_icon.png" alt="facebook" />
-              </a>
+                </a>
 
-              <a href="https://telegram.me/yourusername" style="text-decoration: none; color: #6B7280;">
-               <img src="https://capi.conquerror.com/images/telegram.png" alt="telegram" />
-              </a>
+                <a href="https://telegram.me/yourusername" style="text-decoration: none; color: #6B7280;">
+                <img src="https://capi.conquerror.com/images/telegram.png" alt="telegram" />
+                </a>
 
-              <a href="https://wa.me/yourphonenumber" style="text-decoration: none; color: #6B7280;">
-               <img src="https://capi.conquerror.com/images/whatsapp.png" alt="whatsapp" />
-              </a>
+                <a href="https://wa.me/yourphonenumber" style="text-decoration: none; color: #6B7280;">
+                <img src="https://capi.conquerror.com/images/whatsapp.png" alt="whatsapp" />
+                </a>
 
-              <a href="viber://chat?number=01715378419" style="text-decoration: none; color: #6B7280;">
+                <a href="viber://chat?number=01715378419" style="text-decoration: none; color: #6B7280;">
                 <img src="https://capi.conquerror.com/images/viber.png" alt="viber" />
-              </a>
+                </a>
             </div>
 
             <p style="margin-bottom: 16px">
-              <a href="#" class="link">Homepage</a> |
-              <a href="#" class="link">Help Center</a> |
-              <a href="#" class="link">Forgot your password?</a>
+                <a href="#" class="link">Homepage</a> |
+                <a href="#" class="link">Help Center</a> |
+                <a href="#" class="link">Forgot your password?</a>
             </p>
 
             <p
-              style="
+                style="
                 font-size: 14px;
                 font-weight: 600;
                 color: #374151;
                 margin-bottom: 16px;
-              "
+                "
             >
-              You're receiving this email because you're a valued member of
-              Conqueror Services.
+                You're receiving this email because you're a valued member of
+                Conqueror Services.
             </p>
 
             <p
-              style="
+                style="
                 font-size: 14px;
                 font-weight: 500;
                 color: #374151;
                 margin-bottom: 8px;
-              "
+                "
             >
-              If you'd prefer not to receive marketing emails, you can
+                If you'd prefer not to receive marketing emails, you can
             </p>
 
             <p
-              style="
+                style="
                 font-size: 14px;
                 font-weight: 500;
                 color: #374151;
                 margin-bottom: 16px;
-              "
+                "
             >
-              <a href="#" style="color: #374151">unsubscribe here</a>.
+                <a href="#" style="color: #374151">unsubscribe here</a>.
             </p>
 
             <p style="font-size: 14px; font-weight: 500; color: #374151">
-              Have questions? Read our
-              <a href="#" style="color: #374151">Privacy Policy</a>
-              or Terms of Use,
+                Have questions? Read our
+                <a href="#" style="color: #374151">Privacy Policy</a>
+                or Terms of Use,
             </p>
 
             <p
-              style="
+                style="
                 font-size: 14px;
                 font-weight: 500;
                 color: #374151;
                 margin-bottom: 16px;
-              "
+                "
             >
-              or visit the <a href="#" style="color: #374151">Help Center</a> or
-              <a href="#" style="color: #374151">+97142837636</a> for assistance.
+                or visit the <a href="#" style="color: #374151">Help Center</a> or
+                <a href="#" style="color: #374151">+97142837636</a> for assistance.
             </p>
 
             <div >
-              <p style="font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 8px;"></p>
+                <p style="font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 8px;"></p>
                 Conqueror Services L.L.C
-              </p>
+                </p>
 
-              <p style="font-size: 14px; font-weight: 600; color: #374151">City Pharmacy Bld, Port Saeed, Dubai</p>
+                <p style="font-size: 14px; font-weight: 600; color: #374151">City Pharmacy Bld, Port Saeed, Dubai</p>
             </div>
-          </div>
+            </div>
         </div>
-      </body>
+        </body>
     </html>
   `,
   };
@@ -919,38 +877,295 @@ const interviewMeetingScheduled = ({ to, user_name, meeting_type, data }) => {
     to: to,
     text: "Interview Meeting scheduled",
     subject: "Interview Meeting scheduled",
+    // html: `
+    //   <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
+    //     <h2 style="color: #333;">Password Reset Request</h2>
+    //     <p>Hi ${user_name}</p>
+
+    //     <p>Meeting Type : ${meeting_type}</p>
+
+    //     ${
+    //       meeting_type === "online"
+    //         ? `
+    //       <p>Meeting Time : ${data?.time}</p>
+    //       <p>Meeting Data : ${data?.scheduled_at}</p>
+    //       <p>Time Zone : ${data?.zonecountry}</p>
+    //       <p>Zoom Link : ${data?.meetingurl}</p>
+    //     `
+    //         : `
+    //       <p>Meeting Time : ${data?.time}</p>
+    //       <p>Meeting Data : ${data?.scheduled_at}</p>
+    //       <p>Time Zone : ${data?.zonecountry}</p>
+    //       <p>Address : ${data?.address}</p>
+    //       <p>State / Province : ${data?.state}</p>
+    //       <p>City / District : ${data?.city}</p>
+    //       <p>Police Station : ${data?.police_station}</p>
+    //       <p>Post Office : ${data?.post_office}</p>
+    //       <p>Required Document : ${data?.required_document}</p>
+    //       `
+    //     }
+
+    //     <p>Meeting Type : ${data?.message}</p>
+
+    //     <p>Thank you!</p>
+    //   </div>
+    // `,
     html: `
-      <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
-        <h2 style="color: #333;">Password Reset Request</h2>
-        <p>Hi ${user_name}</p>
+      <!DOCTYPE html>
+      <html lang="en">
+          <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Email Template</title>
+          <style>
+              body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: #fff;
+              }
 
-        <p>Meeting Type : ${meeting_type}</p>
+              h1,
+              h2,
+              h3,
+              h4,
+              h5,
+              h6,
+              p {
+              margin: 0;
+              padding: 0;
+              }
 
-        ${
-          meeting_type === "online"
-            ? `
-          <p>Meeting Time : ${data?.time}</p>
-          <p>Meeting Data : ${data?.scheduled_at}</p>
-          <p>Time Zone : ${data?.zonecountry}</p>
-          <p>Zoom Link : ${data?.meetingurl}</p>
-        `
-            : `
-          <p>Meeting Time : ${data?.time}</p>
-          <p>Meeting Data : ${data?.scheduled_at}</p>
-          <p>Time Zone : ${data?.zonecountry}</p>
-          <p>Address : ${data?.address}</p>
-          <p>State / Province : ${data?.state}</p>
-          <p>City / District : ${data?.city}</p>
-          <p>Police Station : ${data?.police_station}</p>
-          <p>Post Office : ${data?.post_office}</p>
-          <p>Required Document : ${data?.required_document}</p>
-          `
-        }
-     
-        <p>Meeting Type : ${data?.message}</p>
+              .email-container {
+              max-width: 600px;
+              margin: 20px auto;
+              background-color: #f9fafb;
+              padding: 24px;
+              border-radius: 10px;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+              }
+              .email-header {
+              text-align: center;
+              }
+              .email-header img {
+              max-width: 150px;
+              }
+              .email-body {
+              padding: 16px;
+              margin-top: 20px;
+              border-radius: 16px;
+              background: #ffffff;
+              }
+              .email-body h2 {
+              font-size: 30px;
+              font-weight: 700;
+              color: #111928;
+              margin-top: 0;
+              text-align: center;
+              margin-bottom: 32px;
+              }
 
-        <p>Thank you!</p>
-      </div>
+              .email-body p {
+              font-size: 16px;
+              font-weight: 400;
+              color: #374151;
+              line-height: 24px;
+              }
+
+              .support-text {
+              font-size: 14px;
+              color: #666;
+              }
+
+              .email-footer {
+              text-align: center;
+              margin-top: 32px;
+              }
+
+              .email-footer h3 {
+              text-align: center;
+              margin-top: 30px;
+              color: #374151;
+              font-size: 20px;
+              font-weight: 700;
+              }
+
+              .email-footer .link {
+              color: #374151;
+              font-size: 14px;
+              font-weight: 600;
+              }
+
+              .social-icons {
+              gap: 16px;
+              display: flex;
+              margin: 20px 0 32px 0;
+              justify-content: center;
+              }
+              .social-icons img {
+              width: 30px;
+              margin: 0 5px;
+              }
+              .email-footer .address {
+              margin-top: 15px;
+              }
+          </style>
+          </head>
+          <body>
+          <div class="email-container">
+              <div class="email-header">
+              <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" />
+              </div>
+
+              <div class="email-body">
+              <h2>Your Interview Has Been Scheduled</h2>
+              <p>Hi ${user_name},</p>
+
+              <p>
+                  We are excited to invite you for an interview for the [Job Title] position at Conqueror Services! Below are the details:
+              </p>
+                  
+              <p style="margin-top: 20px; margin-bottom: 20px;">
+                  <b>Date:</b> [Insert Date]<br />
+                  <b>Time:</b> [Insert Time]<br />
+                  <b>Location:</b> [Physical Address or Virtual Link]
+              </p>
+
+              <div style="text-align: center; display: inline-block; width: 100%; padding-top: 20px; padding-bottom: 20px;">
+                  <a href="https://capi.conquerror.com/images/test.pdf" target="_blank" class="copy-code" style="text-decoration: none; text-align: center; padding: 8px 15px; background: #C81E1E; color: white; border-radius: 6px;">
+                      <span>Cancel</span>
+                  </a> 
+
+                  <a href="https://capi.conquerror.com/images/test.pdf" target="_blank" class="copy-code" style="text-decoration: none; text-align: center; padding: 8px 15px; background: transparent; border: 1px solid #6B7280; color: black; border-radius: 6px; margin-left: 10px; margin-right: 10px;">
+                      <img src="https://capi.conquerror.com/images/Key.png" alt="Key" />
+                      <span>Re Schedule My Interview</span>
+                  </a> 
+
+                  <a href="https://capi.conquerror.com/images/test.pdf" target="_blank" class="copy-code" style="text-decoration: none; text-align: center; padding: 8px 15px; background: #046C4E; color: white; border-radius: 6px;">
+                      <img src="https://capi.conquerror.com/images/Key.png" alt="Key" />
+                      <span>Confirm My Interview</span>
+                  </a> 
+              </div>
+
+
+              <p class="support-text">
+                  If you have any concerns or specific requests, feel free to contact us at [email or phone number].
+              </p>
+
+              <p>We sincerely apologize for any inconvenience and appreciate your understanding.</p>
+
+              <p style="margin-top: 24px">
+                  Best regards,<br /> Recruitment Team <br /> Conqueror Services
+              </p>
+              </div>
+
+              <div class="email-footer">
+              <h3>CONNECT WITH</h3>
+
+              <div class="social-icons">
+                  <a href="https://www.facebook.com"  style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/Facebook.png" alt="facebook" />
+                  </a>
+
+                  <a href="https://www.instagram.com" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/instagram.png" alt="instagram" />
+                  </a>
+
+                  <a  href="https://www.linkedin.com" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/linkedin.png" alt="linkedin" />
+                  </a>
+
+                  <a href="https://www.youtube.com" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/youtube.png" alt="youtube" />
+                  </a>
+
+                  <a href="https://m.me/yourusername" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/facebookA_icon.png" alt="facebook" />
+                  </a>
+
+                  <a href="https://telegram.me/yourusername" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/telegram.png" alt="telegram" />
+                  </a>
+
+                  <a href="https://wa.me/yourphonenumber" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/whatsapp.png" alt="whatsapp" />
+                  </a>
+
+                  <a href="viber://chat?number=01715378419" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/viber.png" alt="viber" />
+                  </a>
+              </div>
+
+              <p style="margin-bottom: 16px">
+                  <a href="#" class="link">Homepage</a> |
+                  <a href="#" class="link">Help Center</a> |
+                  <a href="#" class="link">Forgot your password?</a>
+              </p>
+
+              <p
+                  style="
+                  font-size: 14px;
+                  font-weight: 600;
+                  color: #374151;
+                  margin-bottom: 16px;
+                  "
+              >
+                  You're receiving this email because you're a valued member of
+                  Conqueror Services.
+              </p>
+
+              <p
+                  style="
+                  font-size: 14px;
+                  font-weight: 500;
+                  color: #374151;
+                  margin-bottom: 8px;
+                  "
+              >
+                  If you'd prefer not to receive marketing emails, you can
+              </p>
+
+              <p
+                  style="
+                  font-size: 14px;
+                  font-weight: 500;
+                  color: #374151;
+                  margin-bottom: 16px;
+                  "
+              >
+                  <a href="#" style="color: #374151">unsubscribe here</a>.
+              </p>
+
+              <p style="font-size: 14px; font-weight: 500; color: #374151">
+                  Have questions? Read our
+                  <a href="#" style="color: #374151">Privacy Policy</a>
+                  or Terms of Use,
+              </p>
+
+              <p
+                  style="
+                  font-size: 14px;
+                  font-weight: 500;
+                  color: #374151;
+                  margin-bottom: 16px;
+                  "
+              >
+                  or visit the <a href="#" style="color: #374151">Help Center</a> or
+                  <a href="#" style="color: #374151">+97142837636</a> for assistance.
+              </p>
+
+              <div >
+                  <p style="font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 8px;"></p>
+                  Conqueror Services L.L.C
+                  </p>
+
+                  <p style="font-size: 14px; font-weight: 600; color: #374151">City Pharmacy Bld, Port Saeed, Dubai</p>
+              </div>
+              </div>
+          </div>
+          </body>
+      </html>
     `,
   };
 
