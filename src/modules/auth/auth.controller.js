@@ -403,6 +403,8 @@ const employeeRegistration = async (req, res, next) => {
     const password = generatePassword();
     const passwordHashed = await hashPassword(password);
 
+    console.log(generateRefCode(date_of_birth, first_name, last_name, phone));
+
     const [user, created] = await User.findOrCreate({
       where: { email },
       defaults: {
@@ -442,7 +444,12 @@ const employeeRegistration = async (req, res, next) => {
 
         password: passwordHashed,
         registration_type: "employee",
-        ref_code: generateRefCode(date_of_birth, first_name, last_name, phone),
+        refer_code: generateRefCode(
+          date_of_birth,
+          first_name,
+          last_name,
+          phone
+        ),
       },
     });
 

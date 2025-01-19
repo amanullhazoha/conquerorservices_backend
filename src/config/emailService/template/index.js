@@ -122,10 +122,10 @@ const emailVerifyMailForApplicant = ({ email, user_name, otp, message }) => {
 
             .social-icons {
               gap: 16px;
-              display: flex;
-              margin: 20px 0 32px 0;
-              justify-content: center;
+              text-align: center;
+              margin: 20px auto 32px auto;
             }
+
             .social-icons img {
               width: 30px;
               margin: 0 5px;
@@ -425,10 +425,10 @@ const verifySuccessMail = ({ email, user_name, message }) => {
 
             .social-icons {
               gap: 16px;
-              display: flex;
-              margin: 20px 0 32px 0;
-              justify-content: center;
+              text-align: center;
+              margin: 20px auto 32px auto;
             }
+
             .social-icons img {
               width: 30px;
               margin: 0 5px;
@@ -692,11 +692,11 @@ const sendPasswordResetEmail = ({ to, token }) => {
             }
 
             .social-icons {
-            gap: 16px;
-            display: flex;
-            margin: 20px 0 32px 0;
-            justify-content: center;
+              gap: 16px;
+              text-align: center;
+              margin: 20px auto 32px auto;
             }
+              
             .social-icons img {
             width: 30px;
             margin: 0 5px;
@@ -945,10 +945,10 @@ const oneTimePassword = ({ to, user_name, password, refer_code }) => {
 
               .social-icons {
               gap: 16px;
-              display: flex;
-              margin: 20px 0 32px 0;
-              justify-content: center;
+              text-align: center;
+              margin: 20px auto 32px auto;
               }
+
               .social-icons img {
               width: 30px;
               margin: 0 5px;
@@ -991,7 +991,7 @@ const oneTimePassword = ({ to, user_name, password, refer_code }) => {
 
 
               <p class="support-text">
-                  If you have any questions or require additional support, feel free to contact us at [Contact Information].
+                  If you have any questions or require additional support, feel free to contact us.
               </p>
 
 
@@ -1238,11 +1238,10 @@ const interviewMeetingScheduled = ({ to, user_name, meeting_type, data }) => {
               font-weight: 600;
               }
 
-              .social-icons {
+             .social-icons {
               gap: 16px;
-              display: flex;
-              margin: 20px 0 32px 0;
-              justify-content: center;
+              text-align: center;
+              margin: 20px auto 32px auto;
               }
               .social-icons img {
               width: 30px;
