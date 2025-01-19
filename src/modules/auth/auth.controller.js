@@ -318,7 +318,14 @@ const agentRegistration = async (req, res, next) => {
     if (!created)
       return res.status(400).json({ message: "You already have and account." });
 
-    nodemailer(oneTimePassword({ to: email, user_name: full_name, password }));
+    nodemailer(
+      oneTimePassword({
+        password,
+        to: email,
+        user_name: full_name,
+        refer_code: user?.refer_code,
+      })
+    );
 
     res.status(201).json({
       message: "Agent registration successfully",
@@ -447,6 +454,7 @@ const employeeRegistration = async (req, res, next) => {
         to: email,
         user_name: `${first_name} ${last_name}`,
         password,
+        refer_code: user?.refer_code,
       })
     );
 

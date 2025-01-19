@@ -850,21 +850,262 @@ const sendPasswordResetEmail = ({ to, token }) => {
   return mailOptions;
 };
 
-const oneTimePassword = ({ to, user_name, password }) => {
+const oneTimePassword = ({ to, user_name, password, refer_code }) => {
   const mailOptions = {
     from: process.env.EMAIL_SENDER_ACCOUNT,
     to: to,
-    text: "One Time Password",
-    subject: "One Time Password",
+    text: "One Time Password & Reference Code",
+    subject: "One Time Password & Reference Code",
     html: `
-      <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
-        <h2 style="color: #333;">Password Reset Request</h2>
-        <p>Hi ${user_name}</p>
+      <!DOCTYPE html>
+      <html lang="en">
+          <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Email Template</title>
+          <style>
+              body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: #fff;
+              }
 
-        <p>Your one time password is : ${password}</p>
-     
-        <p>Thank you!</p>
-      </div>
+              h1,
+              h2,
+              h3,
+              h4,
+              h5,
+              h6,
+              p {
+              margin: 0;
+              padding: 0;
+              }
+
+              .email-container {
+              max-width: 600px;
+              margin: 20px auto;
+              background-color: #f9fafb;
+              padding: 24px;
+              border-radius: 10px;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+              }
+              .email-header {
+              text-align: center;
+              }
+              .email-header img {
+              max-width: 150px;
+              }
+              .email-body {
+              padding: 16px;
+              margin-top: 20px;
+              border-radius: 16px;
+              background: #ffffff;
+              }
+              .email-body h2 {
+              font-size: 30px;
+              font-weight: 700;
+              color: #111928;
+              margin-top: 0;
+              text-align: center;
+              margin-bottom: 32px;
+              }
+
+              .email-body p {
+              font-size: 16px;
+              font-weight: 400;
+              color: #374151;
+              line-height: 24px;
+              }
+
+              .support-text {
+              font-size: 14px;
+              color: #666;
+              }
+
+              .email-footer {
+              text-align: center;
+              margin-top: 32px;
+              }
+
+              .email-footer h3 {
+              text-align: center;
+              margin-top: 30px;
+              color: #374151;
+              font-size: 20px;
+              font-weight: 700;
+              }
+
+              .email-footer .link {
+              color: #374151;
+              font-size: 14px;
+              font-weight: 600;
+              }
+
+              .social-icons {
+              gap: 16px;
+              display: flex;
+              margin: 20px 0 32px 0;
+              justify-content: center;
+              }
+              .social-icons img {
+              width: 30px;
+              margin: 0 5px;
+              }
+              .email-footer .address {
+              margin-top: 15px;
+              }
+          </style>
+          </head>
+          <body>
+          <div class="email-container">
+              <div class="email-header">
+              <img src="https://capi.conquerror.com/images/conqueror_logo.png" alt="Conqueror Services L.L.C" />
+              </div>
+
+              <div class="email-body">
+              <h2>One Time Password & Reference Code</h2>
+              <p>Dear ${user_name},</p>
+              <p>
+                  Thank you for using Conqueror Services L.L.C. For your security, please use the following One Time Password (OTP) to complete your transaction or log in:
+              </p>
+
+              <div style="text-align: center; display: inline-block; width: 100%; padding-top: 20px; padding-bottom: 20px;">
+                  <b>Password:</b> ${password}
+              </div>
+
+              <p class="support-text">
+                  For security reasons, do not share this password with anyone.
+              </p>
+
+              <p>Below is the reference code associated with your recent request or transaction:</p>
+
+              <div style="text-align: center; display: inline-block; width: 100%; padding-top: 20px; padding-bottom: 20px;">
+                  <b>Reference Code:</b> ${refer_code}
+              </div>
+
+              <p>
+                  Please keep this code for your records and provide it if you need further assistance regarding this matter.
+              </p>
+
+
+              <p class="support-text">
+                  If you have any questions or require additional support, feel free to contact us at [Contact Information].
+              </p>
+
+
+              <p style="margin-top: 24px">
+                  Best regards,<br />Conqueror Services Support Team
+              </p>
+              </div>
+
+              <div class="email-footer">
+              <h3>CONNECT WITH</h3>
+
+              <div class="social-icons">
+                  <a href="https://www.facebook.com"  style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/Facebook.png" alt="facebook" />
+                  </a>
+
+                  <a href="https://www.instagram.com" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/instagram.png" alt="instagram" />
+                  </a>
+
+                  <a  href="https://www.linkedin.com" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/linkedin.png" alt="linkedin" />
+                  </a>
+
+                  <a href="https://www.youtube.com" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/youtube.png" alt="youtube" />
+                  </a>
+
+                  <a href="https://m.me/yourusername" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/facebookA_icon.png" alt="facebook" />
+                  </a>
+
+                  <a href="https://telegram.me/yourusername" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/telegram.png" alt="telegram" />
+                  </a>
+
+                  <a href="https://wa.me/yourphonenumber" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/whatsapp.png" alt="whatsapp" />
+                  </a>
+
+                  <a href="viber://chat?number=01715378419" style="text-decoration: none; color: #6B7280;">
+                  <img src="https://capi.conquerror.com/images/viber.png" alt="viber" />
+                  </a>
+              </div>
+
+              <p style="margin-bottom: 16px">
+                  <a href="#" class="link">Homepage</a> |
+                  <a href="#" class="link">Help Center</a> |
+                  <a href="#" class="link">Forgot your password?</a>
+              </p>
+
+              <p
+                  style="
+                  font-size: 14px;
+                  font-weight: 600;
+                  color: #374151;
+                  margin-bottom: 16px;
+                  "
+              >
+                  You're receiving this email because you're a valued member of
+                  Conqueror Services.
+              </p>
+
+              <p
+                  style="
+                  font-size: 14px;
+                  font-weight: 500;
+                  color: #374151;
+                  margin-bottom: 8px;
+                  "
+              >
+                  If you'd prefer not to receive marketing emails, you can
+              </p>
+
+              <p
+                  style="
+                  font-size: 14px;
+                  font-weight: 500;
+                  color: #374151;
+                  margin-bottom: 16px;
+                  "
+              >
+                  <a href="#" style="color: #374151">unsubscribe here</a>.
+              </p>
+
+              <p style="font-size: 14px; font-weight: 500; color: #374151">
+                  Have questions? Read our
+                  <a href="#" style="color: #374151">Privacy Policy</a>
+                  or Terms of Use,
+              </p>
+
+              <p
+                  style="
+                  font-size: 14px;
+                  font-weight: 500;
+                  color: #374151;
+                  margin-bottom: 16px;
+                  "
+              >
+                  or visit the <a href="#" style="color: #374151">Help Center</a> or
+                  <a href="#" style="color: #374151">+97142837636</a> for assistance.
+              </p>
+
+              <div >
+                  <p style="font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 8px;"></p>
+                  Conqueror Services L.L.C
+                  </p>
+
+                  <p style="font-size: 14px; font-weight: 600; color: #374151">City Pharmacy Bld, Port Saeed, Dubai</p>
+              </div>
+              </div>
+          </div>
+          </body>
+      </html>
     `,
   };
 
