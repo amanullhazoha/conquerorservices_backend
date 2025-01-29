@@ -57,10 +57,12 @@ const getAllJobApplicants = async (req, res, next) => {
       whereCondition = { ...whereCondition };
     }
 
+    console.log(req.user.country);
+
     if (req?.user?.role === "checker") {
       whereCondition = {
         ...whereCondition,
-        country: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
+        nationality: { [Op.like]: `%${req.user.country}%` },
       };
     }
 
@@ -124,7 +126,7 @@ const getAllNewApplicants = async (req, res, next) => {
     if (req?.user?.role === "checker") {
       whereCondition = {
         ...whereCondition,
-        country: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
+        nationality: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
       };
     }
 
@@ -200,7 +202,7 @@ const getAllInterviewApplicants = async (req, res, next) => {
     if (req?.user?.role === "checker") {
       whereCondition = {
         ...whereCondition,
-        country: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
+        nationality: { [Op.like]: `%${req.user.country.toLowerCase()}%` },
       };
     }
 
