@@ -596,7 +596,7 @@ const verifySuccessMail = ({ email, user_name, message }) => {
   };
 };
 
-const sendPasswordResetEmail = ({ to, token }) => {
+const sendPasswordResetEmail = ({ to, token, user_name }) => {
   const resetLink = `${process.env.FRONTEND_PORTAL_BASE_URL}/forgot-password?token=${token}&step=2 `;
 
   const mailOptions = {

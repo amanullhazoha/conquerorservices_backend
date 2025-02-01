@@ -142,7 +142,13 @@ const userForgotPassword = async (req, res, next) => {
       }
     );
 
-    nodemailer(sendPasswordResetEmail({ to: user.email, token }));
+    nodemailer(
+      sendPasswordResetEmail({
+        token,
+        to: user.email,
+        user_name: user?.full_name,
+      })
+    );
 
     res.status(201).send({
       message: "Verify link sent on your mail successfully",
@@ -402,8 +408,6 @@ const employeeRegistration = async (req, res, next) => {
 
     const password = generatePassword();
     const passwordHashed = await hashPassword(password);
-
-    console.log(generateRefCode(date_of_birth, first_name, last_name, phone));
 
     const [user, created] = await User.findOrCreate({
       where: { email },

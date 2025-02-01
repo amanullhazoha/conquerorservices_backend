@@ -1538,7 +1538,64 @@ const applicationStatusUpdateById = async (req, res, next) => {
   }
 };
 
+const applicantImageUpdate = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+
+    let nid_cnic_back;
+    let nid_cnic_front;
+    let applicant_resume;
+    let applicant_passport;
+
+    if (req?.files?.nid_cnic_front) {
+      nid_cnic_front = req?.files?.nid_cnic_front[0]?.filename;
+    }
+
+    if (req?.files?.nid_cnic_back) {
+      nid_cnic_back = req?.files?.nid_cnic_back[0]?.filename;
+    }
+
+    if (req?.files?.applicant_passport) {
+      applicant_passport = req?.files?.applicant_passport[0]?.filename;
+    }
+
+    if (req?.files?.applicant_resume) {
+      applicant_resume = req?.files?.applicant_resume[0]?.filename;
+    }
+
+    const applicant = await Applicant.findOne({ where: { id } });
+
+    if (!applicant)
+      return res.status(404).json({ message: "Data not found by Id." });
+
+    if (nid_cnic_back) {
+      await applicant.update({
+        nid_cnic_back,
+      });
+    } else if (nid_cnic_front) {
+      await applicant.update({
+        nid_cnic_front,
+      });
+    } else if (applicant_resume) {
+      await applicant.update({
+        applicant_resume,
+      });
+    } else if (applicant_passport) {
+      await applicant.update({
+        applicant_passport,
+      });
+    }
+
+    res.status(201).send(applicant);
+  } catch (error) {
+    console.log(error);
+
+    next(error);
+  }
+};
+
 module.exports = {
+  applicantImageUpdate,
   getJobApplicantId,
   updateApplication,
   googleOauthCallBack,

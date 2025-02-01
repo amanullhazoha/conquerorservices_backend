@@ -15,6 +15,7 @@ const {
   jobApplyNidOrCnicSchema,
 } = require("./applicant.schema");
 const {
+  applicantImageUpdate,
   getJobApplicantId,
   updateApplication,
   googleOauthCallBack,
@@ -131,6 +132,18 @@ module.exports = (app) => {
     ]),
     validate(jobApplyLicenseSchema),
     updateApplicantLicenseInfo
+  );
+
+  app.put(
+    "/api/v1/public/career/jobs/apply/photo/:id",
+    upload.fields([
+      { name: "UAE_DL_Front", maxCount: 1 },
+      { name: "UAE_DL_Back", maxCount: 1 },
+      { name: "appli_dri_lisence_frontpart", maxCount: 1 },
+      { name: "appli_dri_lisence_backpart", maxCount: 1 },
+    ]),
+    // validate(jobApplyLicenseSchema),
+    applicantImageUpdate
   );
 
   app.post("/api/v1/public/change-email", jobApplicantChangeMail);
