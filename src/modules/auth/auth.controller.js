@@ -52,13 +52,13 @@ const userLogin = async (req, res, next) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(404).send("You have no account.");
+      return res.status(404).send({ message: "You have no account." });
     }
 
     const match = await comparePassword(password, user.password);
 
     if (!match) {
-      return res.status(404).send("Invalid credentials.");
+      return res.status(404).send({ message: "Invalid credentials." });
     }
 
     const access_token = generateAccessToken(user);
